@@ -33,15 +33,17 @@ Card::Card() {
 }
 
 Card::Card(const std::string &rank_in, const std::string &suit_in) {
-    assert(false);
+    rank = rank_in;
+    suit = suit_in;
+    
 }
 
 std::string Card::get_rank() const {
-    assert(false);
+    return rank;
 }
 
 std::string Card::get_suit() const {
-    assert(false);
+    return suit;
 }
 
 std::string Card::get_suit(const std::string &trump) const {
