@@ -48,24 +48,24 @@ std::string Card::get_suit() const {
 }
 
 std::string Card::get_suit(const std::string &trump) const {
-    if (trump == "Diamonds") {
-        if (this->suit == "Hearts" && this->rank == "Jack") {
-            return "Diamonds";
+    if (trump == SUIT_DIAMONDS) {
+        if (this->suit == SUIT_HEARTS && this->rank == RANK_JACK) {
+            return SUIT_DIAMONDS;
         }
     }
-    else if (trump == "Hearts") {
-        if (this->suit == "Diamonds" && this->rank == "Jack") {
-            return "Hearts";
+    else if (trump == SUIT_HEARTS) {
+        if (this->suit == SUIT_DIAMONDS && this->rank == RANK_JACK) {
+            return SUIT_HEARTS;
         }
     }
-    else if (trump == "Spades") {
-        if (this->suit == "Clubs" && this->rank == "Jack") {
-            return "Spades";
+    else if (trump == SUIT_SPADES) {
+        if (this->suit == SUIT_CLUBS && this->rank == RANK_JACK) {
+            return SUIT_SPADES;
         }
     }
-    else if (trump == "Clubs") {
-        if (this->suit == "Spades" && this->rank == "Jack") {
-            return "Clubs";
+    else if (trump == SUIT_CLUBS) {
+        if (this->suit == SUIT_SPADES && this->rank == RANK_JACK) {
+            return SUIT_CLUBS;
         }
     }
     
@@ -267,9 +267,37 @@ bool Card_less(const Card &a, const Card &b, const std::string &trump) {
     return true;
 }
 
+//REQUIRES trump is a valid suit
+//EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
+//  and the suit led to determine order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, const Card &led_card,
                const std::string &trump) {
-    assert(false);
+    if (a.is_trump(trump) && b.is_trump(trump)) {
+        if (operator<(a, b)) {
+            return true;
+        }
+        else return false;
+    }
+    else if (a.is_trump(trump) && !b.is_trump(trump)) {
+        return false;
+    }
+    else if (!a.is_trump(trump) && b.is_trump(trump)) {
+        return true;
+    }
+    else if (a.get_suit() == led_card.get_suit()) {
+        return false;
+    }
+    else if (a.get_suit() != led_card.get_suit()) {
+        if (b.get_suit() == led_card.get_suit()) {
+            return true;
+        }
+    }
+    else if (operator>=(a, b)) {
+        return false;
+    }
+    
+    return true;
+    
 }
 
 

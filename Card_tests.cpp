@@ -11,6 +11,34 @@ TEST(test_card_ctor) {
     Card c(Card::RANK_ACE, Card::SUIT_HEARTS);
     ASSERT_EQUAL(Card::RANK_ACE, c.get_rank());
     ASSERT_EQUAL(Card::SUIT_HEARTS, c.get_suit());
+    ASSERT_EQUAL(Card::SUIT_HEARTS, c.get_suit(Card::SUIT_DIAMONDS));
+    
+    Card c2(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_EQUAL(Card::SUIT_DIAMONDS, c2.get_suit(Card::SUIT_DIAMONDS));
+    
+    Card c3(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    ASSERT_EQUAL(Card::SUIT_HEARTS, c3.get_suit(Card::SUIT_HEARTS));
+    
+    Card c4(Card::RANK_JACK, Card::SUIT_CLUBS);
+    ASSERT_EQUAL(Card::SUIT_SPADES, c4.get_suit(Card::SUIT_SPADES));
+    
+    Card c5(Card::RANK_JACK, Card::SUIT_SPADES);
+    ASSERT_EQUAL(Card::SUIT_CLUBS, c5.get_suit(Card::SUIT_CLUBS));
+    ASSERT_TRUE(c5.is_face());
+    
+    Card c6(Card::RANK_SIX, Card::SUIT_SPADES);
+    ASSERT_EQUAL(Card::SUIT_SPADES, c6.get_suit(Card::SUIT_DIAMONDS));
+    
+    Card c7(Card::RANK_ACE, Card::SUIT_CLUBS);
+    ASSERT_FALSE(c7.is_face());
+    
+    Card c8(Card::RANK_KING, Card::SUIT_HEARTS);
+    ASSERT_TRUE(c8.is_face());
+}
+
+TEST(test_card_get_rank_suit) {
+    Card c(Card::RANK_ACE, Card::SUIT_HEARTS);
+    
 }
 
 // Add more test cases here
