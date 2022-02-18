@@ -38,8 +38,82 @@ TEST(test_card_ctor) {
 
 TEST(test_card_get_rank_suit) {
     Card c(Card::RANK_ACE, Card::SUIT_HEARTS);
+    ASSERT_EQUAL(c.get_rank(), Card::RANK_ACE);
     
 }
+
+TEST(test_get_suit_trump) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    ASSERT_EQUAL(c.get_suit(Card::SUIT_HEARTS), Card::SUIT_HEARTS);
+
+}
+
+TEST(test_is_right_bower) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    ASSERT_TRUE(c.is_right_bower(Card::SUIT_DIAMONDS));
+    ASSERT_FALSE(c.is_right_bower(Card::SUIT_HEARTS));
+    ASSERT_FALSE(c.is_right_bower(Card::SUIT_CLUBS));
+    ASSERT_FALSE(c.is_right_bower(Card::SUIT_SPADES));
+
+    Card c1(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+    ASSERT_FALSE(c1.is_right_bower(Card::SUIT_DIAMONDS));
+    ASSERT_FALSE(c1.is_right_bower(Card::SUIT_HEARTS));
+    ASSERT_FALSE(c1.is_right_bower(Card::SUIT_CLUBS));
+    ASSERT_FALSE(c1.is_right_bower(Card::SUIT_SPADES));
+
+    Card c2(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    ASSERT_FALSE(c2.is_right_bower(Card::SUIT_DIAMONDS));
+    ASSERT_FALSE(c2.is_right_bower(Card::SUIT_HEARTS));
+    ASSERT_FALSE(c2.is_right_bower(Card::SUIT_CLUBS));
+    ASSERT_FALSE(c2.is_right_bower(Card::SUIT_SPADES));
+
+}
+
+TEST(test_is_left_bower) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    ASSERT_TRUE(c.is_left_bower(Card::SUIT_HEARTS));
+    ASSERT_FALSE(c.is_left_bower(Card::SUIT_DIAMONDS));
+    ASSERT_FALSE(c.is_left_bower(Card::SUIT_CLUBS));
+    ASSERT_FALSE(c.is_left_bower(Card::SUIT_SPADES));
+
+    Card c1(Card::RANK_JACK, Card::SUIT_CLUBS);
+    ASSERT_TRUE(c1.is_left_bower(Card::SUIT_SPADES));
+    ASSERT_FALSE(c1.is_left_bower(Card::SUIT_DIAMONDS));
+    ASSERT_FALSE(c1.is_left_bower(Card::SUIT_CLUBS));
+    ASSERT_FALSE(c1.is_left_bower(Card::SUIT_HEARTS));
+
+    Card c2(Card::RANK_QUEEN, Card::SUIT_CLUBS);
+    ASSERT_FALSE(c2.is_left_bower(Card::SUIT_DIAMONDS));
+    ASSERT_FALSE(c2.is_left_bower(Card::SUIT_CLUBS));
+    ASSERT_FALSE(c2.is_left_bower(Card::SUIT_HEARTS));
+    ASSERT_FALSE(c2.is_left_bower(Card::SUIT_HEARTS));
+
+}
+
+TEST(test_less_than_operator) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c1(Card::RANK_JACK, Card::SUIT_HEARTS);
+    //ASSERT_TRUE(operator<(c1, c));
+
+
+    Card c2(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c3(Card::RANK_ACE, Card::SUIT_HEARTS);
+    ASSERT_TRUE(operator<(c2, c3));
+
+
+    Card c4(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    Card c5(Card::RANK_JACK, Card::SUIT_HEARTS);
+
+    Card c6(Card::RANK_TEN, Card::SUIT_DIAMONDS);
+    Card c7(Card::RANK_JACK, Card::SUIT_HEARTS);
+
+    //Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    //Card c1(Card::RANK_JACK, Card::SUIT_CLUBS);
+
+    //ASSERT_TRUE(operator<(c1,c));
+
+}
+
 
 // Add more test cases here
 

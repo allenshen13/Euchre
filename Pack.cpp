@@ -6,6 +6,8 @@
 #include "Pack.h"
 
 Pack::Pack() {
+
+
     assert(false);
 }
 
@@ -25,6 +27,8 @@ void Pack::reset() {
 }
 
 void Pack::shuffle() {
+
+
     assert(false);
     assert(next);
 }
