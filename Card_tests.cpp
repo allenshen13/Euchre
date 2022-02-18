@@ -242,7 +242,32 @@ TEST(test_card_less) {
     ASSERT_TRUE(Card_less(c6, c7, Card::SUIT_DIAMONDS))
 
 }
+TEST(test_card_less_led) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c1(Card::RANK_JACK, Card::SUIT_SPADES);
+    Card led(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    ASSERT_TRUE(Card_less(c, c1, led, Card::SUIT_SPADES));
+    ASSERT_TRUE(Card_less(c, c1, led, Card::SUIT_CLUBS));
 
+    Card c2(Card::RANK_ACE, Card::SUIT_CLUBS);
+    Card c3(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+    Card led2(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    ASSERT_TRUE(Card_less(c2, c3, led2, Card::SUIT_SPADES));
+    ASSERT_FALSE(Card_less(c2, c3, led2, Card::SUIT_CLUBS));
+
+    Card c4(Card::RANK_ACE, Card::SUIT_SPADES);
+    Card c5(Card::RANK_JACK, Card::SUIT_CLUBS);
+    Card led3(Card::RANK_NINE, Card::SUIT_SPADES);
+    ASSERT_TRUE(Card_less(c4, c5, led3, Card::SUIT_SPADES));
+    ASSERT_TRUE(Card_less(c4, c5, led3, Card::SUIT_CLUBS));
+
+    Card c6(Card::RANK_ACE, Card::SUIT_HEARTS);
+    Card c7(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card led4(Card::RANK_NINE, Card::SUIT_SPADES);
+    ASSERT_TRUE(Card_less(c6, c7, led4, Card::SUIT_HEARTS));
+    ASSERT_FALSE(Card_less(c6, c7, led4, Card::SUIT_SPADES));
+
+}
 // Add more test cases here
 
 TEST_MAIN()

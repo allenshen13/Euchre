@@ -265,20 +265,47 @@ bool Card_less(const Card &a, const Card &b, const std::string &trump) {
 bool Card_less(const Card &a, const Card &b, const Card &led_card,
                const std::string &trump) {
     if (led_card.get_suit() == trump) {
-        if (operator<(a, b)) {
+        if (Card_less(a, b, trump)) {
             return true;
         }
-        else return false;
+        else {
+            return false;
+        }
     }
     else {
-        if (a.is_right_bower(trump) || (a.is_left_bower(trump) && !b.is_right_bower(trump))) {
+        if (a.is_right_bower(trump)) {
             return false;
         }
         else if (b.is_right_bower(trump) || b.is_left_bower(trump)) {
             return true;
         }
-
-      
+        else if (a.is_left_bower(trump)) {
+            return false;
+        }
+        else if (a.get_suit() == trump && b.get_suit() == trump) {
+            return operator<(a, b);
+        }
+        else if (a.get_suit() == trump) {
+            return false;
+        }
+        else if (b.get_suit() == trump) {
+            return true;
+        }
+        else {
+            if (a.get_suit() == led_card.get_suit() && 
+                b.get_suit() == led_card.get_suit()) {
+                return operator<(a, b);
+            }
+            else if (a.get_suit() == led_card.get_suit()) {
+                return false;
+            }
+            else if (b.get_suit() == led_card.get_suit()) {
+                return true;
+            }
+            else {
+                return operator<(a, b);
+            }
+        }
     }
 
     /*if (a.is_trump(trump) && b.is_trump(trump)) {
