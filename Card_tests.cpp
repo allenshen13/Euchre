@@ -93,7 +93,7 @@ TEST(test_is_left_bower) {
 TEST(test_less_than_operator) {
     Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
     Card c1(Card::RANK_JACK, Card::SUIT_HEARTS);
-    //ASSERT_TRUE(operator<(c1, c));
+    ASSERT_TRUE(operator<(c1, c));
 
 
     Card c2(Card::RANK_JACK, Card::SUIT_DIAMONDS);
@@ -103,17 +103,123 @@ TEST(test_less_than_operator) {
 
     Card c4(Card::RANK_NINE, Card::SUIT_DIAMONDS);
     Card c5(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_TRUE(operator<(c4, c5));
+
 
     Card c6(Card::RANK_TEN, Card::SUIT_DIAMONDS);
     Card c7(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_TRUE(operator<(c6, c7));
 
-    //Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
-    //Card c1(Card::RANK_JACK, Card::SUIT_CLUBS);
+    Card c8(Card::RANK_TEN, Card::SUIT_HEARTS);
+    Card c9(Card::RANK_TEN, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator<(c8, c9));
+    
 
-    //ASSERT_TRUE(operator<(c1,c));
 
 }
 
+TEST(test_less_than_equal_operator) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c1(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_TRUE(operator<=(c1, c));
+
+
+    Card c2(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c3(Card::RANK_ACE, Card::SUIT_HEARTS);
+    ASSERT_TRUE(operator<=(c2, c3));
+
+
+    Card c4(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    Card c5(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_TRUE(operator<=(c4, c5));
+
+
+    Card c6(Card::RANK_TEN, Card::SUIT_DIAMONDS);
+    Card c7(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_TRUE(operator<=(c6, c7));
+
+    Card c8(Card::RANK_TEN, Card::SUIT_HEARTS);
+    Card c9(Card::RANK_TEN, Card::SUIT_HEARTS);
+    ASSERT_TRUE(operator<=(c8, c9));
+}
+TEST(test_greater_than_operator) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c1(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator>(c1, c));
+
+
+    Card c2(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c3(Card::RANK_ACE, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator>(c2, c3));
+
+
+    Card c4(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    Card c5(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator>(c4, c5));
+
+
+    Card c6(Card::RANK_TEN, Card::SUIT_DIAMONDS);
+    Card c7(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator>(c6, c7));
+
+    Card c8(Card::RANK_TEN, Card::SUIT_HEARTS);
+    Card c9(Card::RANK_TEN, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator>(c8, c9));
+}
+
+TEST(test_greater_than_equal_operator) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c1(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator>=(c1, c));
+
+
+    Card c2(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c3(Card::RANK_ACE, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator>=(c2, c3));
+
+
+    Card c4(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    Card c5(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator>=(c4, c5));
+
+
+    Card c6(Card::RANK_TEN, Card::SUIT_DIAMONDS);
+    Card c7(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator>=(c6, c7));
+
+    Card c8(Card::RANK_TEN, Card::SUIT_HEARTS);
+    Card c9(Card::RANK_TEN, Card::SUIT_HEARTS);
+    ASSERT_TRUE(operator>=(c8, c9));
+}
+TEST(test_equal_operator) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c1(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_FALSE(operator==(c1, c));
+
+
+    Card c2(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c3(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    ASSERT_TRUE(operator==(c2, c3));
+
+    Card c4(Card::RANK_KING, Card::SUIT_DIAMONDS);
+    Card c5(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    ASSERT_FALSE(operator==(c4, c5));
+}
+
+TEST(test_not_equal_operator) {
+    Card c(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c1(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_TRUE(operator!=(c1, c));
+
+
+    Card c2(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    Card c3(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    ASSERT_FALSE(operator!=(c2, c3));
+
+    Card c4(Card::RANK_KING, Card::SUIT_DIAMONDS);
+    Card c5(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    ASSERT_TRUE(operator!=(c4, c5));
+}
 
 // Add more test cases here
 

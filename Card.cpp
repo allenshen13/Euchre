@@ -279,6 +279,7 @@ bool operator<(const Card &lhs, const Card &rhs) {
     }
     
     return false;
+    */
 }
 
 bool operator<=(const Card &lhs, const Card &rhs) {
@@ -337,7 +338,7 @@ bool Card_less(const Card &a, const Card &b, const std::string &trump) {
     }
     
     return true;
-    */
+    
 
 }
 
