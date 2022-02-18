@@ -220,6 +220,28 @@ TEST(test_not_equal_operator) {
     Card c5(Card::RANK_JACK, Card::SUIT_DIAMONDS);
     ASSERT_TRUE(operator!=(c4, c5));
 }
+TEST(test_card_less) {
+    Card c(Card::RANK_JACK, Card::SUIT_CLUBS);
+    Card c1(Card::RANK_JACK, Card::SUIT_HEARTS);
+    ASSERT_TRUE(Card_less(c, c1, Card::SUIT_HEARTS));
+    ASSERT_TRUE(Card_less(c, c1, Card::SUIT_DIAMONDS));
+
+    Card c2(Card::RANK_KING, Card::SUIT_DIAMONDS);
+    Card c3(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    ASSERT_TRUE(Card_less(c2, c3, Card::SUIT_DIAMONDS));
+    ASSERT_TRUE(Card_less(c2, c3, Card::SUIT_HEARTS));
+
+    Card c4(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    Card c5(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    ASSERT_TRUE(Card_less(c4, c5, Card::SUIT_SPADES));
+    ASSERT_TRUE(Card_less(c4, c5, Card::SUIT_DIAMONDS))
+
+    Card c6(Card::RANK_NINE, Card::SUIT_HEARTS);
+    Card c7(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    ASSERT_TRUE(Card_less(c6, c7, Card::SUIT_CLUBS));
+    ASSERT_TRUE(Card_less(c6, c7, Card::SUIT_DIAMONDS))
+
+}
 
 // Add more test cases here
 

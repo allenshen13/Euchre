@@ -185,101 +185,6 @@ bool operator<(const Card &lhs, const Card &rhs) {
     else {
         return false;
     }
-    /*int rankLeft = 0;
-    if (lhs.get_rank() != "Ace" && lhs.get_rank() != "Jack" && lhs.get_rank() != "Queen" && lhs.get_rank() != "King") {
-        std::stringstream ss(lhs.get_rank());
-        ss >> rankLeft;
-    }
-    int rankRight = 0;
-    if (rhs.get_rank() != "Ace" && rhs.get_rank() != "Jack" && rhs.get_rank() != "Queen" && rhs.get_rank() != "King") {
-        std::stringstream ss(rhs.get_rank());
-        ss >> rankRight;
-    }
-    
-    if (rankLeft != 0 && rankRight != 0) {
-        if (rankLeft < rankRight) {
-            return true;
-        }
-        else if (rankLeft == rankRight) {
-            if (lhs.get_suit() == "Diamonds") {
-                return false;
-            }
-            else if (lhs.get_suit() == "Clubs") {
-                if (rhs.get_suit() == "Diamonds") {
-                    return true;
-                }
-                else return false;
-            }
-            else if (lhs.get_suit() == "Hearts") {
-                if (rhs.get_suit() == "Diamonds" || rhs.get_suit() == "Clubs") {
-                    return true;
-                }
-                else return false;
-            }
-            else if (lhs.get_suit() == "Spades") {
-                if (rhs.get_suit() == "Spades") {
-                    return false;
-                }
-                else return true;
-            }
-        }
-    }
-    
-    else if (rankLeft ==  0 && rankRight != 0) {
-        return false;
-    }
-    else if (rankLeft != 0 && rankRight == 0) {
-        return true;
-    }
-    else if (rankLeft == 0 && rankRight == 0) {
-        if (lhs.get_suit() == "Ace") {
-            if (rhs.get_suit() == "Ace") {
-                if (lhs.get_suit() == "Diamonds") {
-                    return false;
-                }
-                else if (lhs.get_suit() == "Clubs") {
-                    if (rhs.get_suit() == "Diamonds") {
-                        return true;
-                    }
-                    else return false;
-                }
-                else if (lhs.get_suit() == "Hearts") {
-                    if (rhs.get_suit() == "Diamonds" || rhs.get_suit() == "Clubs") {
-                        return true;
-                    }
-                    else return false;
-                }
-                else if (lhs.get_suit() == "Spades") {
-                    if (rhs.get_suit() == "Spades") {
-                        return false;
-                    }
-                    else return true;
-                }
-            }
-            else return false;
-        }
-        else if (lhs.get_suit() == "King") {
-            if (rhs.get_suit() == "Ace") {
-                return true;
-            }
-            else return false;
-        }
-        else if (lhs.get_suit() == "Queen") {
-            if (rhs.get_suit() == "Ace" || rhs.get_suit() == "King") {
-                return true;
-            }
-            else return false;
-        }
-        else if (lhs.get_suit() == "Jack") {
-            if (rhs.get_suit() == "Jack") {
-                return false;
-            }
-            else return true;
-        }
-    }
-    
-    return false;
-    */
 }
 
 bool operator<=(const Card &lhs, const Card &rhs) {
@@ -321,25 +226,37 @@ std::ostream & operator<<(std::ostream &os, const Card &card) {
 }
 
 bool Card_less(const Card &a, const Card &b, const std::string &trump) {
-    if (a.is_trump(trump) && !b.is_trump(trump)) {
+    if (a.is_right_bower(trump)) {
         return false;
     }
-    else if (!a.is_trump(trump) && b.is_trump(trump)) {
+    else if (b.is_right_bower(trump)) {
         return true;
     }
-    else if (a.is_trump(trump) && b.is_trump(trump)) {
-        if (operator<(a, b)) {
-            return true;
-        }
-        else return false;
-    }
-    else if (operator>=(a, b)) {
+    else if (a.is_left_bower(trump)) {
         return false;
     }
-    
-    return true;
-    
+    else if (b.is_left_bower(trump)) {
+        return true;
+    }
+    else {
+        if (a.is_trump(trump) && !b.is_trump(trump)) {
+            return false;
+        }
+        else if (!a.is_trump(trump) && b.is_trump(trump)) {
+            return true;
+        }
+        else if (a.is_trump(trump) && b.is_trump(trump)) {
+            if (operator<(a, b)) {
+                return true;
+            }
+            else return false;
+        }
+        else if (operator>=(a, b)) {
+            return false;
+        }
 
+        return true;
+    }
 }
 
 //REQUIRES trump is a valid suit
@@ -347,7 +264,24 @@ bool Card_less(const Card &a, const Card &b, const std::string &trump) {
 //  and the suit led to determine order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, const Card &led_card,
                const std::string &trump) {
-    if (a.is_trump(trump) && b.is_trump(trump)) {
+    if (led_card.get_suit() == trump) {
+        if (operator<(a, b)) {
+            return true;
+        }
+        else return false;
+    }
+    else {
+        if (a.is_right_bower(trump) || (a.is_left_bower(trump) && !b.is_right_bower(trump))) {
+            return false;
+        }
+        else if (b.is_right_bower(trump) || b.is_left_bower(trump)) {
+            return true;
+        }
+
+      
+    }
+
+    /*if (a.is_trump(trump) && b.is_trump(trump)) {
         if (operator<(a, b)) {
             return true;
         }
@@ -372,7 +306,9 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card,
     }
     
     return true;
-    
+    */
+
+    return true;
 }
 
 
