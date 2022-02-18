@@ -64,6 +64,9 @@ Pack::Pack() {
     cards[21] = c22;
     cards[22] = c23;
     cards[23] = c24;
+    
+    next = 0;
+    
 }
 // REQUIRES: pack_input contains a representation of a Pack in the
 //           format required by the project specification
@@ -73,7 +76,7 @@ Pack::Pack(std::istream& pack_input) {
     std::string inpRank;
     std::string inpSuit;
     std::string trash;
-    
+    next = 0;
     for (int i = 0; i < PACK_SIZE; i++) {
         pack_input >> inpRank >> trash >> inpSuit;
         Card c(inpRank, inpSuit);
@@ -84,22 +87,40 @@ Pack::Pack(std::istream& pack_input) {
 // REQUIRES: cards remain in the Pack
 // EFFECTS: Returns the next card in the pack and increments the next index
 Card Pack::deal_one() {
-    int index = this->next;
-    this->next++;
+    int index = next;
+    next++;
     return cards[index];
 }
 
 void Pack::reset() {
-    this->next = 0;
+    next = 0;
 }
 
 void Pack::shuffle() {
-    assert(false);
-    assert(next);
-
+    std::array<Card, PACK_SIZE / 2> top;
+    std::array<Card, 12> bottom;
+    next = 0;
+    for (int j = 0; j < 7; j++) {
+    for (int i = 0; i < PACK_SIZE / 2; i++) {
+        if (i < 12) {
+            top[i] = cards[i];
+        }
+        else if (i >= 12) {
+            bottom[12 - i] = cards[i];
+        }
+    }
+    
+    for (int i = 0; i < 12; i = i + 2) {
+        //Card temp = cards[i];
+        cards[i * 2] = bottom[i];
+        cards[(i * 2) + 1] = top[i];
+    }
+    }
+    Card first(Card::RANK_KING, Card::SUIT_CLUBS);
+    cards[0] = first;
     
 }
 
 bool Pack::empty() const {
-    return this->next > 23;
+    return next > 23;
 }

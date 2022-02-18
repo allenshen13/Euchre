@@ -20,7 +20,7 @@ TEST(test_pack_default_ctor) {
 }
 
 TEST(test_pack_istream_ctor) {
-  const string filename = "pack.in";
+  const string filename = "pack2.in";
   ifstream ifs(filename);
   assert(ifs.is_open());
   Pack pack(ifs);
@@ -45,12 +45,12 @@ TEST(test_pack_empty) {
   pack.deal_one();
   ASSERT_TRUE(pack.empty());
 }
-/*
+
 TEST(test_pack_shuffle) {
   Pack pack;
   pack.shuffle();
   Card first_card = pack.deal_one();
   ASSERT_EQUAL(first_card, Card(Card::RANK_KING, Card::SUIT_CLUBS));
 }
-*/
+
 TEST_MAIN()
