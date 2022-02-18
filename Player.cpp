@@ -18,4 +18,5 @@ const std::string & Player::get_name() const {
 
 void Player::add_card(const Card &c) {
     assert(false);
+    
 }
