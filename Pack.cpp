@@ -19,6 +19,11 @@ Pack::Pack() {
     Card c5(Card::RANK_KING, Card::SUIT_SPADES);
     Card c6(Card::RANK_ACE, Card::SUIT_SPADES);
     
+
+
+
+    assert(false);
+
 }
 
 Pack::Pack(std::istream& pack_input) {
@@ -37,6 +42,8 @@ void Pack::reset() {
 }
 
 void Pack::shuffle() {
+
+
     assert(false);
     assert(next);
 }

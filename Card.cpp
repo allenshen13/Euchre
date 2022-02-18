@@ -113,7 +113,79 @@ bool Card::is_trump(const std::string &trump) const {
 //  Does not consider trump.
 //(A > K > Q > J > 10 > 9), with ties broken by suit (D > C > H > S)
 bool operator<(const Card &lhs, const Card &rhs) {
-    int rankLeft = 0;
+    int lhsCardVal = 0;
+    int rhsCardVal = 0;
+
+    if (lhs.get_rank() == Card::RANK_NINE) {
+        lhsCardVal += 10;
+    }
+    else if (lhs.get_rank() == Card::RANK_TEN){
+        lhsCardVal += 20;
+    }
+    else if (lhs.get_rank() == Card::RANK_JACK){
+        lhsCardVal += 30;
+    }
+    else if(lhs.get_rank() == Card::RANK_QUEEN){
+        lhsCardVal += 40;
+    }
+    else if (lhs.get_rank() == Card::RANK_KING) {
+        lhsCardVal += 50;
+    }
+    else if (lhs.get_rank() == Card::RANK_ACE) {
+        lhsCardVal += 60;
+    }
+
+    if (lhs.get_suit() == Card::SUIT_SPADES) {
+        lhsCardVal += 1;
+    }
+    else if (lhs.get_suit() == Card::SUIT_HEARTS) {
+        lhsCardVal += 2;
+    }
+    else if (lhs.get_suit() == Card::SUIT_CLUBS) {
+        lhsCardVal += 3;
+    }
+    else if (lhs.get_suit() == Card::SUIT_DIAMONDS) {
+        lhsCardVal += 4;
+    }
+    if (rhs.get_rank() == Card::RANK_NINE) {
+        rhsCardVal += 10;
+    }
+    else if (rhs.get_rank() == Card::RANK_TEN) {
+        rhsCardVal += 20;
+    }
+    else if (rhs.get_rank() == Card::RANK_JACK) {
+        rhsCardVal += 30;
+    }
+    else if (rhs.get_rank() == Card::RANK_QUEEN) {
+        rhsCardVal += 40;
+    }
+    else if (rhs.get_rank() == Card::RANK_KING) {
+        rhsCardVal += 50;
+    }
+    else if (rhs.get_rank() == Card::RANK_ACE) {
+        rhsCardVal += 60;
+    }
+
+    if (rhs.get_suit() == Card::SUIT_SPADES) {
+        rhsCardVal += 1;
+    }
+    else if (rhs.get_suit() == Card::SUIT_HEARTS) {
+        rhsCardVal += 2;
+    }
+    else if (rhs.get_suit() == Card::SUIT_CLUBS) {
+        rhsCardVal += 3;
+    }
+    else if (rhs.get_suit() == Card::SUIT_DIAMONDS) {
+        rhsCardVal += 4;
+    }
+
+    if (lhsCardVal < rhsCardVal) {
+        return true;
+    }
+    else {
+        return false;
+    }
+    /*int rankLeft = 0;
     if (lhs.get_rank() != "Ace" && lhs.get_rank() != "Jack" && lhs.get_rank() != "Queen" && lhs.get_rank() != "King") {
         std::stringstream ss(lhs.get_rank());
         ss >> rankLeft;
@@ -265,6 +337,8 @@ bool Card_less(const Card &a, const Card &b, const std::string &trump) {
     }
     
     return true;
+    */
+
 }
 
 //REQUIRES trump is a valid suit
