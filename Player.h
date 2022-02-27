@@ -64,15 +64,3 @@ Player * Player_factory(const std::string &name, const std::string &strategy);
 std::ostream & operator<<(std::ostream &os, const Player &p);
 
 #endif
-
-class SimplePlayer : public Player {
-  public:
-    
-    
-};
-
-class Human : public Player {
-  public:
-    
-    
-};

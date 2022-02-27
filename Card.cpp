@@ -30,13 +30,13 @@ constexpr const char* const Card::SUIT_DIAMONDS;
 // add your code below
 
 Card::Card() {
-    this->rank = "Two";
-    this->suit = "Spades";
+    rank = "Two";
+    suit = "Spades";
 }
 
 Card::Card(const std::string &rank_in, const std::string &suit_in) {
-    this->rank = rank_in;
-    this->suit = suit_in;
+    rank = rank_in;
+    suit = suit_in;
 }
 
 std::string Card::get_rank() const {
@@ -46,6 +46,8 @@ std::string Card::get_rank() const {
 std::string Card::get_suit() const {
     return suit;
 }
+
+
 
 std::string Card::get_suit(const std::string &trump) const {
     if (trump == SUIT_DIAMONDS) {
@@ -73,7 +75,8 @@ std::string Card::get_suit(const std::string &trump) const {
 }
 
 bool Card::is_face() const {
-    return this->rank == "Jack" || this->rank == "King" || this->rank == "Queen";
+    return this->rank == RANK_JACK || this->rank == RANK_KING || this->rank == RANK_QUEEN
+    || this->rank == RANK_ACE;
 }
 
 bool Card::is_right_bower(const std::string &trump) const {
@@ -106,7 +109,7 @@ bool Card::is_left_bower(const std::string &trump) const {
 }
 
 bool Card::is_trump(const std::string &trump) const {
-    return is_left_bower(trump) || (this->suit == trump);
+    return (is_left_bower(trump)) || (this->suit == trump);
 }
 
 //EFFECTS Returns true if lhs is lower value than rhs.
