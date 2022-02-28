@@ -144,6 +144,17 @@ public:
 
         }
         if (trumpCount == MAX_HAND_SIZE) {
+            for (int i = 0; i < MAX_HAND_SIZE; i++) {
+                if (handCopy[i].is_right_bower(trump)) {
+                    return handCopy[i];
+                }
+            }
+            for (int i = 0; i < MAX_HAND_SIZE; i++) {
+                if (handCopy[i].is_left_bower(trump)) {
+                    return handCopy[i];
+                }
+            }
+            
             return handCopy[MAX_HAND_SIZE - 1];
         }
         else {
@@ -162,11 +173,20 @@ public:
         vector<Card> neither;
         vector<Card> onlySuit;
         
-        for (int i = 0; i < MAX_HAND_SIZE; i++) {
-            if (hand[i].get_suit() == led_card.get_suit()) {
+        for (int i = 0; i < hand.size(); i++) {
+            if (hand[i].get_suit() == led_card.get_suit() &&
+                !hand[i].is_left_bower(trump)) {
+                
                 hasSuit = 1;
                 onlySuit.push_back(hand[i]);
             }
+            
+            if (led_card.get_suit() == trump) {
+                if (hand[i].is_left_bower(trump)) {
+                    onlySuit.push_back(hand[i]);
+                }
+            }
+
             if (hand[i].is_trump(trump)) {
                 numTrumps++;
                 trumpOnly.push_back(hand[i]);
@@ -179,11 +199,36 @@ public:
         
         if (hasSuit != 0) {
             sort(onlySuit.begin(), onlySuit.end());
+            if (led_card.get_suit() == trump) {
+                for (int i = 0; i < onlySuit.size(); i++) {
+                    if (onlySuit[i].is_right_bower(trump)) {
+                        return onlySuit[i];
+                    }
+                }
+                for (int i = 0; i < onlySuit.size(); i++) {
+                    if (onlySuit[i].is_left_bower(trump)) {
+                        return onlySuit[i];
+                    }
+                }
+            }
             return onlySuit[onlySuit.size() - 1];
         }
         else {
             if (numTrumps != 0 && neitherCount == 0) {
                 sort(trumpOnly.begin(), trumpOnly.end());
+                if (trumpOnly[0].is_right_bower(trump) && trumpOnly.size() > 1) {
+                    if (trumpOnly[1].is_left_bower(trump) && trumpOnly.size() > 2) {
+                        return trumpOnly[2];
+                    }
+                    else {
+                        return trumpOnly[1];
+                    }
+                    
+                }
+                else if (trumpOnly[0].is_left_bower(trump) && trumpOnly.size() > 1) {
+                    return trumpOnly[1];
+                }
+                
                 return trumpOnly[0];
             }
             else {

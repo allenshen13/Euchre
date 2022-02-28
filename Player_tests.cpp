@@ -67,6 +67,30 @@ TEST(test_player_lead_card) {
     ASSERT_EQUAL(alice->lead_card(Card::SUIT_HEARTS), new_expected);
     
     delete alice;
+    
+    Player * rishi = Player_factory("Rishi", "Simple");
+    rishi->add_card(Card(Card::RANK_TEN, Card::SUIT_DIAMONDS));
+    rishi->add_card(Card(Card::RANK_NINE, Card::SUIT_DIAMONDS));
+    rishi->add_card(Card(Card::RANK_ACE, Card::SUIT_DIAMONDS));
+    rishi->add_card(Card(Card::RANK_JACK, Card::SUIT_DIAMONDS));
+    rishi->add_card(Card(Card::RANK_QUEEN, Card::SUIT_DIAMONDS));
+    // test for right bower when all trumps in lead card
+    ASSERT_EQUAL(rishi->lead_card(Card::SUIT_DIAMONDS),
+                 Card(Card::RANK_JACK, Card::SUIT_DIAMONDS));
+    delete rishi;
+    
+    Player * rishi2 = Player_factory("Rishi", "Simple");
+    rishi2->add_card(Card(Card::RANK_TEN, Card::SUIT_DIAMONDS));
+    rishi2->add_card(Card(Card::RANK_NINE, Card::SUIT_DIAMONDS));
+    rishi2->add_card(Card(Card::RANK_ACE, Card::SUIT_DIAMONDS));
+    rishi2->add_card(Card(Card::RANK_JACK, Card::SUIT_HEARTS));
+    rishi2->add_card(Card(Card::RANK_QUEEN, Card::SUIT_DIAMONDS));
+    
+    //test for left bower when all trumps in lead card
+    ASSERT_EQUAL(rishi2->lead_card(Card::SUIT_DIAMONDS),
+                 Card(Card::RANK_JACK, Card::SUIT_HEARTS));
+    
+    delete rishi2;
 }
 
 TEST(test_player_play_card) {
@@ -103,9 +127,42 @@ TEST(test_player_play_card) {
     Card new_expected2(Card::RANK_JACK, Card::SUIT_DIAMONDS);
     ASSERT_EQUAL(bob->play_card(Card(Card::RANK_ACE, Card::SUIT_DIAMONDS), "Spades"),
                  new_expected2);
-    
-    
+
     delete bob;
+    
+    Player * shen = Player_factory("Shen", "Simple");
+    shen->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+    shen->add_card(Card(Card::RANK_JACK, Card::SUIT_CLUBS));
+    //left bower is considered trump suit
+    Card expected3(Card(Card::RANK_JACK, Card::SUIT_CLUBS));
+    ASSERT_EQUAL(shen->play_card(Card(), Card::SUIT_SPADES), expected3);
+
+
+    delete shen;
+    
+    // case of left bower, right bower, and ace of trump, with non-trump led card
+    // should return ace of trump since its lowest
+    Player * shenal = Player_factory("Shenal", "Simple");
+    shenal->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+    shenal->add_card(Card(Card::RANK_JACK, Card::SUIT_CLUBS));
+    shenal->add_card(Card(Card::RANK_JACK, Card::SUIT_SPADES));
+    //left bower is considered trump suit
+    Card expected4(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+    ASSERT_EQUAL(shenal->play_card(Card(Card::RANK_QUEEN, Card::SUIT_DIAMONDS),
+                                 Card::SUIT_SPADES), expected4);
+    delete shenal;
+    
+    Player * shenal2 = Player_factory("Shenal", "Simple");
+    shenal2->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+    shenal2->add_card(Card(Card::RANK_JACK, Card::SUIT_CLUBS));
+    //left bower is considered trump suit
+    Card expected5(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+    ASSERT_EQUAL(shenal2->play_card(Card(Card::RANK_QUEEN, Card::SUIT_DIAMONDS),
+                                 Card::SUIT_SPADES), expected5);
+
+
+    delete shenal2;
+
 }
 
 
