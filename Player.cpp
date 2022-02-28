@@ -166,6 +166,9 @@ public:
 
    
     Card play_card(const Card& led_card, const std::string& trump) override {
+        if (hand.size() == 1) {
+            return hand[0];
+        }
         int hasSuit = 0;
         int numTrumps = 0;
         int neitherCount = 0;

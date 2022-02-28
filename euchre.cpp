@@ -6,6 +6,8 @@
 #include <iostream>
 #include <array>
 #include "unit_test_framework.h"
+#include <fstream>
+#include <cstdlib>
 using namespace std;
 
 class Game {
@@ -15,10 +17,11 @@ private:
     Pack pack;
     array<int, 4> score;
     int hand;
+    bool shuffle;
     
 public:
     
-    Game() {
+    Game(Pack p, bool shuffle_in) : pack(p), shuffle(shuffle_in) {
         for (int i = 0; i < 4; i++) {
             score[i] = 0;
         }
@@ -39,7 +42,9 @@ public:
     }
     
     void deal(int dealer_index) {
-        pack.shuffle();
+        if (shuffle) {
+            pack.shuffle();
+        }
         for (int i = 0; i < 2; i++) {
             if (i == 0) {
                 players[dealer_index + 1]->add_card(pack.deal_one());
@@ -133,14 +138,49 @@ public:
                 (score[2] + score[4]) >= points_needed);
     }
     
-    
-    
-    
-    
 
 };
 
 
-int main() {
-    cout << "hi";
+int main(int argc, char* argv[]) {
+    if (!strcmp(argv[2], "shuffle") || !strcmp(argv[2], "noshuffle") || argc != 12 ||
+        (atoi(argv[3]) < 1 || atoi(argv[3]) > 100) || !strcmp(argv[5], "Simple") ||
+        !strcmp(argv[5], "Human") || !strcmp(argv[7], "Simple") ||
+        !strcmp(argv[7], "Human") || !strcmp(argv[9], "Simple") ||
+        !strcmp(argv[9], "Human") || !strcmp(argv[11], "Simple") ||
+        !strcmp(argv[11], "Human")) {
+        cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
+             << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
+             << "NAME4 TYPE4" << endl;
+        return 1;
+    }
+    ifstream is(argv[1]);
+    if (!is.is_open()) {
+        cout << "Error opening " << argv[1] << endl;
+        return 1;
+    }
+    bool shuff = true;
+    Pack p(is);
+    if (strcmp(argv[2], "noshuffle")) {
+        shuff = false;
+    }
+    Game g(is, shuff);
+    for (int i = 4; i <= 10; i += 2) {
+        g.add_player(argv[i], argv[i + 1]);
+    }
+    while (!g.has_won(atoi(argv[3]))) {
+        int dealer = 0;
+        g.deal(dealer);
+        
+        
+    }
+    
+    
+    
+
+    
+    
+  //  int points_to_win = argv[3];
+    
+    
 }
