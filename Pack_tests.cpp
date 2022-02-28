@@ -3,6 +3,7 @@
 #include "Pack.h"
 #include "unit_test_framework.h"
 
+
 #include <iostream>
 
 using namespace std;
@@ -12,7 +13,13 @@ TEST(test_pack_default_ctor) {
     Card first = pack.deal_one();
     ASSERT_EQUAL(Card::RANK_NINE, first.get_rank());
     ASSERT_EQUAL(Card::SUIT_SPADES, first.get_suit());
+    Card second = pack.deal_one();
+    ASSERT_EQUAL(Card::RANK_TEN, second.get_rank());
+    ASSERT_EQUAL(Card::SUIT_SPADES, second.get_suit());
+    
 }
+
+
 
 // Add more tests here
 

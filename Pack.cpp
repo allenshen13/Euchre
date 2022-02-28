@@ -12,58 +12,14 @@
 // NOTE: The standard order is the same as that in pack.in.
 // NOTE: Do NOT use pack.in in your implementation of this function
 Pack::Pack() {
-    Card c1(Card::RANK_NINE, Card::SUIT_SPADES);
-    Card c2(Card::RANK_TEN, Card::SUIT_SPADES);
-    Card c3(Card::RANK_JACK, Card::SUIT_SPADES);
-    Card c4(Card::RANK_QUEEN, Card::SUIT_SPADES);
-    Card c5(Card::RANK_KING, Card::SUIT_SPADES);
-    Card c6(Card::RANK_ACE, Card::SUIT_SPADES);
-    
-    Card c7(Card::RANK_NINE, Card::SUIT_HEARTS);
-    Card c8(Card::RANK_TEN, Card::SUIT_HEARTS);
-    Card c9(Card::RANK_JACK, Card::SUIT_HEARTS);
-    Card c10(Card::RANK_QUEEN, Card::SUIT_HEARTS);
-    Card c11(Card::RANK_KING, Card::SUIT_HEARTS);
-    Card c12(Card::RANK_ACE, Card::SUIT_HEARTS);
-    
-    Card c13(Card::RANK_NINE, Card::SUIT_CLUBS);
-    Card c14(Card::RANK_TEN, Card::SUIT_CLUBS);
-    Card c15(Card::RANK_JACK, Card::SUIT_CLUBS);
-    Card c16(Card::RANK_QUEEN, Card::SUIT_CLUBS);
-    Card c17(Card::RANK_KING, Card::SUIT_CLUBS);
-    Card c18(Card::RANK_ACE, Card::SUIT_CLUBS);
-    
-    Card c19(Card::RANK_NINE, Card::SUIT_DIAMONDS);
-    Card c20(Card::RANK_TEN, Card::SUIT_DIAMONDS);
-    Card c21(Card::RANK_JACK, Card::SUIT_DIAMONDS);
-    Card c22(Card::RANK_QUEEN, Card::SUIT_DIAMONDS);
-    Card c23(Card::RANK_KING, Card::SUIT_DIAMONDS);
-    Card c24(Card::RANK_ACE, Card::SUIT_DIAMONDS);
-    
-    cards[0] = c1;
-    cards[1] = c2;
-    cards[2] = c3;
-    cards[3] = c4;
-    cards[4] = c5;
-    cards[5] = c6;
-    cards[6] = c7;
-    cards[7] = c8;
-    cards[8] = c9;
-    cards[9] = c10;
-    cards[10] = c11;
-    cards[11] = c12;
-    cards[12] = c13;
-    cards[13] = c14;
-    cards[14] = c15;
-    cards[15] = c16;
-    cards[16] = c17;
-    cards[17] = c18;
-    cards[18] = c19;
-    cards[19] = c20;
-    cards[20] = c21;
-    cards[21] = c22;
-    cards[22] = c23;
-    cards[23] = c24;
+    int index = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 7; j < 13; j++) {
+            Card c(RANK_NAMES_BY_WEIGHT[j], SUIT_NAMES_BY_WEIGHT[i]);
+            cards[index] = c;
+            index++;
+        }
+    }
     
     next = 0;
     
@@ -97,28 +53,32 @@ void Pack::reset() {
 }
 
 void Pack::shuffle() {
-    std::array<Card, PACK_SIZE / 2> top;
+    std::array<Card, 12> top;
     std::array<Card, 12> bottom;
-    next = 0;
-    for (int j = 0; j < 7; j++) {
-    for (int i = 0; i < PACK_SIZE / 2; i++) {
-        if (i < 12) {
-            top[i] = cards[i];
+    for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < PACK_SIZE; i++) {
+            if (i < 12) {
+                top[i] = cards[i];
+            }
+            else if (i >= 12) {
+                bottom[i - 12] = cards[i];
+            }
         }
-        else if (i >= 12) {
-            bottom[12 - i] = cards[i];
+        int bottomIndex = 0;
+        int topIndex = 0;
+        for (int c = 0; c < 24; c++) {
+            if (c % 2 == 0) {
+                cards[c] = bottom[bottomIndex];
+                bottomIndex++;
+            }
+            else {
+                cards[c] = top[topIndex];
+                topIndex++;
+            }
         }
     }
     
-    for (int i = 0; i < 12; i = i + 2) {
-        //Card temp = cards[i];
-        cards[i * 2] = bottom[i];
-        cards[(i * 2) + 1] = top[i];
-    }
-    }
-    Card first(Card::RANK_KING, Card::SUIT_CLUBS);
-    cards[0] = first;
-    
+    reset();
 }
 
 bool Pack::empty() const {
