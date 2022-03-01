@@ -143,22 +143,35 @@ public:
             }
 
         }
-        if (trumpCount == MAX_HAND_SIZE) {
-            for (int i = 0; i < MAX_HAND_SIZE; i++) {
-                if (handCopy[i].is_right_bower(trump)) {
-                    return handCopy[i];
+        if (trumpCount == hand.size()) {
+            for (int i = 0; i < hand.size(); i++) {
+                if (hand[i].is_right_bower(trump)) {
+                    Card c = hand[i];
+                    hand.erase(hand.begin() + i);
+                    return c;
                 }
             }
-            for (int i = 0; i < MAX_HAND_SIZE; i++) {
-                if (handCopy[i].is_left_bower(trump)) {
-                    return handCopy[i];
+            for (int i = 0; i < hand.size(); i++) {
+                if (hand[i].is_left_bower(trump)) {
+                    Card c = hand[i];
+                    hand.erase(hand.begin() + i);
+                    return c;
                 }
             }
-            
-            return handCopy[MAX_HAND_SIZE - 1];
+            for (int i = 0; i < hand.size(); i++) {
+                if (handCopy[handCopy.size() - 1] == hand[i]) {
+                    hand.erase(hand.begin() + i);
+                }
+            }
+            return handCopy[handCopy.size() - 1];
         }
         else {
             sort(noTrump.begin(), noTrump.end());
+            for (int i = 0; i < hand.size(); i++) {
+                if (hand[i] == noTrump[noTrump.size() - 1]) {
+                    hand.erase(hand.begin() + i);
+                }
+            }
             return noTrump[noTrump.size() - 1];
             
             }
@@ -169,78 +182,62 @@ public:
         if (hand.size() == 1) {
             return hand[0];
         }
-        int hasSuit = 0;
-        int numTrumps = 0;
-        int neitherCount = 0;
-        vector<Card> trumpOnly;
-        vector<Card> neither;
+        Card low;
         vector<Card> onlySuit;
-        
         for (int i = 0; i < hand.size(); i++) {
-            if (hand[i].get_suit() == led_card.get_suit() &&
-                !hand[i].is_left_bower(trump)) {
-                
-                hasSuit = 1;
+            if (hand[i].get_suit(trump) == led_card.get_suit(trump)) {
                 onlySuit.push_back(hand[i]);
             }
-            
-            if (led_card.get_suit() == trump) {
+        }
+        Card left_bower;
+        int indexOfLeft = 20;
+        if (led_card.get_suit(trump) == trump) {
+            for (int i = 0; i < hand.size(); i++) {
+                if (hand[i].is_right_bower(trump)) {
+                    Card c = hand[i];
+                    hand.erase(hand.begin() + i);
+                    return c;
+                }
                 if (hand[i].is_left_bower(trump)) {
-                    onlySuit.push_back(hand[i]);
+                    left_bower = hand[i];
+                    indexOfLeft = i;
                 }
             }
-
-            if (hand[i].is_trump(trump)) {
-                numTrumps++;
-                trumpOnly.push_back(hand[i]);
+            if (indexOfLeft != 20) {
+                hand.erase(hand.begin() + indexOfLeft);
+                return left_bower;
             }
-            if ((hand[i].get_suit() != led_card.get_suit()) && !hand[i].is_trump(trump)) {
-                neither.push_back(hand[i]);
-                neitherCount++;
-            }
+            
         }
         
-        if (hasSuit != 0) {
-            sort(onlySuit.begin(), onlySuit.end());
-            if (led_card.get_suit() == trump) {
-                for (int i = 0; i < onlySuit.size(); i++) {
-                    if (onlySuit[i].is_right_bower(trump)) {
-                        return onlySuit[i];
-                    }
-                }
-                for (int i = 0; i < onlySuit.size(); i++) {
-                    if (onlySuit[i].is_left_bower(trump)) {
-                        return onlySuit[i];
-                    }
-                }
-            }
-            return onlySuit[onlySuit.size() - 1];
-        }
         else {
-            if (numTrumps != 0 && neitherCount == 0) {
-                sort(trumpOnly.begin(), trumpOnly.end());
-                if (trumpOnly[0].is_right_bower(trump) && trumpOnly.size() > 1) {
-                    if (trumpOnly[1].is_left_bower(trump) && trumpOnly.size() > 2) {
-                        return trumpOnly[2];
+            if (!onlySuit.empty()) {
+                sort(onlySuit.begin(), onlySuit.end());
+                for (int i = 0; i < hand.size(); i++) {
+                    if (hand[i] == onlySuit[onlySuit.size() - 1]) {
+                        hand.erase(hand.begin() + i);
                     }
-                    else {
-                        return trumpOnly[1];
-                    }
-                    
                 }
-                else if (trumpOnly[0].is_left_bower(trump) && trumpOnly.size() > 1) {
-                    return trumpOnly[1];
-                }
-                
-                return trumpOnly[0];
+                return onlySuit[onlySuit.size() - 1];
             }
+            
             else {
-                sort(neither.begin(), neither.end());
-                return neither[0];
+                int lowest = 0;
+                for (int i = 0; i < hand.size() - 1; i++) {
+                    if (Card_less(hand[i + 1], hand[lowest], led_card, trump)) {
+                        lowest = i + 1;
+                    }
+                }
+                low = hand[lowest];
+                hand.erase(hand.begin() + lowest);
+                
             }
+            
         }
         
+        return low;
     }
+
 
 };
 
