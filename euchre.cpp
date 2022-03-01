@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <array>
-#include "unit_test_framework.h"
+//#include "unit_test_framework.h"
 #include <fstream>
 #include <cstdlib>
 using namespace std;
@@ -21,7 +21,7 @@ private:
     
 public:
     
-    Game(bool shuffle_in) : shuffle(shuffle_in) {
+    Game(Pack p_in, bool shuffle_in) : pack(p_in), shuffle(shuffle_in) {
         score[0] = 0;
         score[1] = 0;
         hand = 0;
@@ -139,8 +139,8 @@ public:
         int player_index = next_player(lead_index);
         for (int i = 0; i < 3; i++) {
             tricks[player_index] = players[player_index]->play_card(led_card, trump);
-            operator<<(cout, tricks[player_index]);
-            cout << " played by " << players[player_index]->get_name() << endl;
+            cout << tricks[player_index] << " played by " <<
+            players[player_index]->get_name() << endl;
             player_index = next_player(player_index);
         }
     
@@ -160,8 +160,7 @@ public:
     void play_hand(Game &g, int dealer_index) {
         g.deal(dealer_index, pack);
         const Card upcard = pack.deal_one();
-        operator<<(cout, upcard);
-        cout << " turned up" << endl;
+        cout << upcard << " turned up" << endl;
         pack.reset();
         bool is_dealer = false;
         int roundOfTrump = 1;
@@ -210,7 +209,7 @@ public:
         
         Card led_card = players[player_index]->lead_card(trump);
         while (trickCount < 5) {
-            operator<<(cout, led_card);
+            cout << led_card;
             cout << " led by " << players[player_index]->get_name() << endl;
             winner_index = play_trick(player_index, led_card, trump);
             cout << players[winner_index]->get_name() << " takes the trick\n" << endl;
@@ -251,6 +250,7 @@ public:
             
         if (teamOrderedUp) {
             if (team_tricks == 5) {
+                cout << "march!" << endl;
                 score[team_index] = score[team_index] + 2;
                 
             }
@@ -259,13 +259,13 @@ public:
             }
         }
         else {
-            cout << "euchered!" << endl;
+            cout << "euchred!" << endl;
             score[team_index] = score[team_index] + 2;
         }
         cout << players[0]->get_name() << " and " << players[2]->get_name() << " have "
         << score[0] << " points" << endl;
         cout << players[1]->get_name() << " and " << players[3]->get_name() << " have "
-        << score[1] << " points" << endl;
+        << score[1] << " points" << endl << endl;
         
         
         
@@ -291,11 +291,11 @@ public:
         }
         
         if (get_winner() == 0) {
-            cout << endl << players[0]->get_name() << " and " << players[2]->get_name()
+            cout << players[0]->get_name() << " and " << players[2]->get_name()
             << " win!" << endl;
         }
         else {
-            cout << endl << players[1]->get_name() << " and " << players[3]->get_name()
+            cout << players[1]->get_name() << " and " << players[3]->get_name()
             << " win!" << endl;
         }
         
@@ -303,82 +303,59 @@ public:
             delete players[i];
         }
     }
-    
-        
-    
 
 };
 
-/*
+
 int main(int argc, char* argv[]) {
-    if (!strcmp(argv[2], "shuffle") || !strcmp(argv[2], "noshuffle") || argc != 12 ||
-        (atoi(argv[3]) < 1 || atoi(argv[3]) > 100) || !strcmp(argv[5], "Simple") ||
-        !strcmp(argv[5], "Human") || !strcmp(argv[7], "Simple") ||
-        !strcmp(argv[7], "Human") || !strcmp(argv[9], "Simple") ||
-        !strcmp(argv[9], "Human") || !strcmp(argv[11], "Simple") ||
-        !strcmp(argv[11], "Human")) {
+    string error = "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
+    "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 NAME4 TYPE4";
+    if (argc != 12) {
+        cout << error << endl; return 1;
+    }
+    for (int i = 0; i < argc; i++) {
+        cout << argv[i] << " ";
+    }
+    cout << endl;
+    string p1(argv[5]), p2(argv[7]), p3(argv[9]), p4(argv[11]), shuffle(argv[2]);
+    if (!((shuffle == "shuffle" || shuffle == "noshuffle") &&
+        (p1 == "Human" || p1 == "Simple") && (p2 == "Human" || p2 == "Simple") &&
+        (p3 == "Human" || p3 == "Simple") && (p4 == "Human" || p4 == "Simple")
+          && (atoi(argv[3]) >= 1 && atoi(argv[3]) <= 100))) {
         cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
              << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
-             << "NAME4 TYPE4" << endl;
-        return 1;
+            << "NAME4 TYPE4" << endl; return 1;
     }
     ifstream is(argv[1]);
     if (!is.is_open()) {
-        cout << "Error opening " << argv[1] << endl;
-        return 1;
+        cout << "Error opening " << argv[1] << endl; return 1;
     }
-    bool shuff = true;
     Pack p(is);
-    if (strcmp(argv[2], "noshuffle")) {
+    bool shuff = true;
+    if (shuffle == "noshuffle") {
         shuff = false;
     }
-    Game g(shuff);
+    Game g(p, shuff);
     for (int i = 4; i <= 10; i += 2) {
         g.add_player(argv[i], argv[i + 1]);
     }
-    int dealer = 0;
-    while (!g.has_won(atoi(argv[3]))) {
-        g.play_hand(g, dealer);
-        
-        
-    }
-    
-    
-}*/
-    
-    
+    g.play_game(g, atoi(argv[3]));
+}
+
+  /*
     TEST(game_stuff) {
-        Game g(false);
-        g.add_player("Adi", "Simple");
-        g.add_player("Barbara", "Simple");
-        g.add_player("Chi-Chih", "Simple");
-        g.add_player("Dabbala", "Simple");
+        ifstream in;
+        in.open("Pack.in");
+        Pack p(in);
+        Game g(p, true);
+        g.add_player("Edsger", "Simple");
+        g.add_player("Fran", "Simple");
+        g.add_player("Gabriel", "Simple");
+        g.add_player("Herb", "Simple");
         
-        g.play_game(g, 1);
+        g.play_game(g, 10);
         
-        /*g.get_player(1)->add_card(Card(Card::RANK_NINE, Card::SUIT_SPADES));
-        g.get_player(1)->add_card(Card(Card::RANK_TEN, Card::SUIT_SPADES));
-        g.get_player(1)->add_card(Card(Card::RANK_JACK, Card::SUIT_SPADES));
-        g.get_player(1)->add_card(Card(Card::RANK_KING, Card::SUIT_HEARTS));
-        g.get_player(1)->add_card(Card(Card::RANK_ACE, Card::SUIT_HEARTS));
         
-        g.get_player(2)->add_card(Card(Card::RANK_QUEEN, Card::SUIT_SPADES));
-        g.get_player(2)->add_card(Card(Card::RANK_KING, Card::SUIT_SPADES));
-        g.get_player(2)->add_card(Card(Card::RANK_NINE, Card::SUIT_CLUBS));
-        g.get_player(2)->add_card(Card(Card::RANK_TEN, Card::SUIT_CLUBS));
-        g.get_player(2)->add_card(Card(Card::RANK_JACK, Card::SUIT_CLUBS));
-        
-        g.get_player(3)->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
-        g.get_player(3)->add_card(Card(Card::RANK_NINE, Card::SUIT_HEARTS));
-        g.get_player(3)->add_card(Card(Card::RANK_TEN, Card::SUIT_HEARTS));
-        g.get_player(3)->add_card(Card(Card::RANK_QUEEN, Card::SUIT_CLUBS));
-        g.get_player(3)->add_card(Card(Card::RANK_KING, Card::SUIT_CLUBS));
-        
-        g.get_player(0)->add_card(Card(Card::RANK_JACK, Card::SUIT_HEARTS));
-        g.get_player(0)->add_card(Card(Card::RANK_QUEEN, Card::SUIT_HEARTS));
-        g.get_player(0)->add_card(Card(Card::RANK_ACE, Card::SUIT_CLUBS));
-        g.get_player(0)->add_card(Card(Card::RANK_NINE, Card::SUIT_DIAMONDS));
-        g.get_player(0)->add_card(Card(Card::RANK_TEN, Card::SUIT_DIAMONDS));*/
         
         
         
@@ -395,7 +372,7 @@ int main(int argc, char* argv[]) {
     }
      
     
-    TEST_MAIN()
+    TEST_MAIN()*/
     
 
     

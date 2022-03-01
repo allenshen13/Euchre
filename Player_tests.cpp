@@ -169,4 +169,24 @@ TEST(test_player_play_card) {
 
 }
 
+TEST(left_bower_play_card_cases) {
+    Player * shenal = Player_factory("Shenal", "Simple");
+    shenal->add_card(Card(Card::RANK_TEN, Card::SUIT_HEARTS));
+    shenal->add_card(Card(Card::RANK_JACK, Card::SUIT_HEARTS));
+    ASSERT_EQUAL(shenal->play_card(Card(Card::RANK_KING, Card::SUIT_HEARTS),
+                                   Card::SUIT_DIAMONDS),
+                 Card(Card::RANK_TEN, Card::SUIT_HEARTS));
+    shenal->add_card(Card(Card::RANK_TEN, Card::SUIT_CLUBS));
+    ASSERT_EQUAL(shenal->play_card(Card(Card::RANK_KING, Card::SUIT_HEARTS),
+                                   Card::SUIT_DIAMONDS),
+                 Card(Card::RANK_TEN, Card::SUIT_CLUBS));
+    
+    shenal->add_card(Card(Card::RANK_ACE, Card::SUIT_DIAMONDS));
+    ASSERT_EQUAL(shenal->play_card(Card(Card::RANK_KING, Card::SUIT_HEARTS),
+                                   Card::SUIT_DIAMONDS),
+                 Card(Card::RANK_ACE, Card::SUIT_DIAMONDS));
+    delete shenal;
+    
+}
+
 TEST_MAIN()

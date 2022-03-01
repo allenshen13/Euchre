@@ -30,7 +30,7 @@ TEST(test_card_ctor) {
     ASSERT_EQUAL(Card::SUIT_SPADES, c6.get_suit(Card::SUIT_DIAMONDS));
     
     Card c7(Card::RANK_ACE, Card::SUIT_CLUBS);
-    ASSERT_FALSE(c7.is_face());
+    ASSERT_TRUE(c7.is_face());
     
     Card c8(Card::RANK_KING, Card::SUIT_HEARTS);
     ASSERT_TRUE(c8.is_face());
@@ -240,6 +240,11 @@ TEST(test_card_less) {
     Card c7(Card::RANK_NINE, Card::SUIT_DIAMONDS);
     ASSERT_TRUE(Card_less(c6, c7, Card::SUIT_CLUBS));
     ASSERT_TRUE(Card_less(c6, c7, Card::SUIT_DIAMONDS))
+    
+    
+    Card c8(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    Card c9(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    ASSERT_FALSE(Card_less(c8, c9, Card::SUIT_CLUBS));
 
 }
 TEST(test_card_less_led) {

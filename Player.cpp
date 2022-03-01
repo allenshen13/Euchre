@@ -110,7 +110,17 @@ public:
     }
 
     void add_and_discard(const Card& upcard) override {
-        vector<Card> handCopy;
+        hand.push_back(upcard);
+        string trump = upcard.get_suit();
+        int index_of_lowest = 0;
+        for (int i = 0; i < hand.size(); i++) {
+            if (Card_less(hand[i], hand[index_of_lowest], trump)) {
+                index_of_lowest = i;
+            }
+        }
+        hand.erase(hand.begin() + index_of_lowest);
+        
+        /*vector<Card> handCopy;
         for (int i = 0; i < hand.size(); i++) {
             handCopy.push_back(hand[i]);
         }
@@ -121,7 +131,7 @@ public:
             hand[i - 1] = handCopy[i];
             
             
-        }
+        }*/
         
     }
 
@@ -191,13 +201,19 @@ public:
         }
         Card low;
         vector<Card> onlySuit;
+        vector<Card> neither;
         for (int i = 0; i < hand.size(); i++) {
             if ((hand[i].get_suit() == led_card.get_suit(trump)) &&
                 !hand[i].is_left_bower(trump)) {
                 
                 onlySuit.push_back(hand[i]);
             }
+            if (!hand[i].is_trump(trump) &&
+                hand[i].get_suit(trump) != led_card.get_suit(trump)) {
+                neither.push_back(hand[i]);
+            }
         }
+        
         Card left_bower;
         int indexOfLeft = 20;
         if (led_card.get_suit(trump) == trump) {
@@ -228,7 +244,15 @@ public:
                     return c;;
                 }
             }
-                //return
+        }
+        if (neither.size() == hand.size()) {
+            sort(neither.begin(), neither.end());
+            for (int i = 0; i < hand.size(); i++) {
+                if (hand[i] == neither[0]) {
+                    hand.erase(hand.begin() + i);
+                    return neither[0];
+                }
+            }
         }
         int lowest = 0;
         for (int i = 0; i < hand.size(); i++) {
@@ -242,11 +266,6 @@ public:
         return low;
         
     }
-    
-        
-
-        
-
 
 };
 
