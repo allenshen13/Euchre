@@ -180,12 +180,16 @@ public:
    
     Card play_card(const Card& led_card, const std::string& trump) override {
         if (hand.size() == 1) {
-            return hand[0];
+            Card c = hand[0];
+            hand.erase(hand.begin());
+            return c;
         }
         Card low;
         vector<Card> onlySuit;
         for (int i = 0; i < hand.size(); i++) {
-            if (hand[i].get_suit(trump) == led_card.get_suit(trump)) {
+            if ((hand[i].get_suit() == led_card.get_suit(trump)) &&
+                !hand[i].is_left_bower(trump)) {
+                
                 onlySuit.push_back(hand[i]);
             }
         }
@@ -210,33 +214,33 @@ public:
             
         }
         
-        else {
-            if (!onlySuit.empty()) {
-                sort(onlySuit.begin(), onlySuit.end());
-                for (int i = 0; i < hand.size(); i++) {
-                    if (hand[i] == onlySuit[onlySuit.size() - 1]) {
-                        hand.erase(hand.begin() + i);
-                    }
+        if (!onlySuit.empty()) {
+            sort(onlySuit.begin(), onlySuit.end());
+            for (int i = 0; i < hand.size(); i++) {
+                if (hand[i] == onlySuit[onlySuit.size() - 1]) {
+                    Card c = hand[i];
+                    hand.erase(hand.begin() + i);
+                    return c;;
                 }
-                return onlySuit[onlySuit.size() - 1];
             }
-            
-            else {
-                int lowest = 0;
-                for (int i = 0; i < hand.size() - 1; i++) {
-                    if (Card_less(hand[i + 1], hand[lowest], led_card, trump)) {
-                        lowest = i + 1;
-                    }
-                }
-                low = hand[lowest];
-                hand.erase(hand.begin() + lowest);
-                
+                //return
+        }
+        int lowest = 0;
+        for (int i = 0; i < hand.size(); i++) {
+            if (Card_less(hand[i], hand[lowest], led_card, trump)) {
+                lowest = i;
             }
-            
         }
         
+        low = hand[lowest];
+        hand.erase(hand.begin() + lowest);
         return low;
+        
     }
+    
+        
+
+        
 
 
 };

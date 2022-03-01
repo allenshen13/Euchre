@@ -85,68 +85,12 @@ public:
         }
         
     }
-    // This function may be irrelevant
-  /*  Player * win_trick(vector<Card> tricks, vector<Player*> playerTricks, string trump,
-                       Card led_card) {
-        for (int i = 0; i < 4; i++) {
-            if (tricks[i].is_right_bower(trump)) {
-                return playerTricks[i];
-            }
-        }
-        for (int i = 0; i < 4; i++) {
-            if (tricks[i].is_left_bower(trump)) {
-                return playerTricks[i];
-            }
-        }
-        
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (j > i) {
-                    if (!Card_less(tricks[i], tricks[j], led_card, trump)) {
-                        Card temp = tricks[i];
-                        tricks[i] = tricks[j];
-                        tricks[j] = temp;
-                        Player * temp2 = playerTricks[i];
-                        playerTricks[i] = playerTricks[j];
-                        playerTricks[j] = temp2;
-                    }
-                }
-            }
-        }
-        
-        return playerTricks[3];
-    }
-    */
-    
-    /*void update_score(Player * won_trick, int tricks_won, bool teamOrderedUp) {
-        assert(tricks_won >= 3);
-        int index = 0;
-        for (int i = 0; i < 4; i++) {
-            if (players[i] == won_trick) {
-                index = i;
-            }
-        }
-        
-        if (teamOrderedUp) {
-            if (tricks_won == 5) {
-                score[index] += 2;
-            }
-            else {
-                score[index] += 1;
-            }
-            
-        }
-        else {
-            score[index] += 2;
-        }
-        
-        hand++;
-    }*/
-    
+   
     //REQUIRES tricks_won >= 3
     //EFFECTS: updates score, takes in player who won trick, num tricks won in hand
     // and if the team ordered up
     
+    //DOES NOT WORK
     void update_score(int team_index, int tricks_won, bool teamOrderedUp) {
         if (teamOrderedUp) {
             if (tricks_won == 5) {
@@ -196,10 +140,6 @@ public:
         
     }
     
-    void discard_from_hand(Card c, Player * p) {
-        
-    }
-    
     void play_hand(Game g, int dealer_index) {
         g.deal(dealer_index);
         Card upcard;
@@ -244,7 +184,6 @@ public:
         int winner_index;
         int trickCount = 0;
         int tricks_won[4] = {0, 0, 0, 0};
-        
         Card led_card = players[player_index]->lead_card(trump);
         while (trickCount < 5) {
             winner_index = play_trick(player_index, led_card, trump);
@@ -273,8 +212,19 @@ public:
                 teamOrderedUp = true;
             }
         }
-         
-        g.update_score(team_index, team_tricks, teamOrderedUp);
+        if (teamOrderedUp) {
+            if (team_tricks == 5) {
+                score[team_index] = score[team_index] + 2;
+            }
+            else {
+                score[team_index] = score[team_index] + 1;
+            }
+            
+        }
+        else {
+            score[team_index] = score[team_index] + 2;
+        }
+        
     
     }
     
@@ -322,6 +272,7 @@ TEST(game_stuff) {
     
     //ASSERT_EQUAL(g.play_trick(1, led_card, trump), 3);
     //g.deal(0);
+    
     g.play_hand(g, 0);
     
     
