@@ -20,7 +20,7 @@ TEST(test_pack_default_ctor) {
 }
 
 TEST(test_pack_istream_ctor) {
-  const string filename = "pack2.in";
+  const string filename = "pack.in";
   ifstream ifs(filename);
   assert(ifs.is_open());
   Pack pack(ifs);

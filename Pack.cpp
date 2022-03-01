@@ -55,7 +55,7 @@ void Pack::reset() {
 void Pack::shuffle() {
     std::array<Card, 12> top;
     std::array<Card, 12> bottom;
-    for (int j = 0; j < 2; j++) {
+    for (int j = 0; j < 7; j++) {
         for (int i = 0; i < PACK_SIZE; i++) {
             if (i < 12) {
                 top[i] = cards[i];

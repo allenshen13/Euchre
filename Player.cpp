@@ -126,6 +126,11 @@ public:
     }
 
     Card lead_card(const std::string& trump) override {
+        if (hand.size() == 1) {
+            Card c = hand[0];
+            hand.erase(hand.begin());
+            return c;
+        }
         vector<Card> handCopy;
         vector<Card> noTrump;
         for (int i = 0; i < MAX_HAND_SIZE; i++) {
@@ -359,7 +364,6 @@ public:
         
         return hand[answer];
     }
-
 
 };
 
