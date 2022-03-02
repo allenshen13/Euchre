@@ -120,19 +120,6 @@ public:
         }
         hand.erase(hand.begin() + index_of_lowest);
         
-        /*vector<Card> handCopy;
-        for (int i = 0; i < hand.size(); i++) {
-            handCopy.push_back(hand[i]);
-        }
-        handCopy.push_back(upcard);
-        sort(handCopy.begin(), handCopy.end());
-        
-        for (int i = 1; i < handCopy.size(); i++) {
-            hand[i - 1] = handCopy[i];
-            
-            
-        }*/
-        
     }
 
     Card lead_card(const std::string& trump) override {
@@ -308,8 +295,8 @@ public:
 
         sort(handCopy.begin(), handCopy.end());
         
-        for (int i = 0; i < hand.size(); i++) {
-            operator<<(cout, hand[i]);
+        for (int i = 0; i < handCopy.size(); i++) {
+            operator<<(cout, handCopy[i]);
             cout << endl;
         }
         
@@ -328,6 +315,7 @@ public:
     }
 
     void add_and_discard(const Card& upcard) override {
+        
         for (int i = 0; i < hand.size(); i++) {
             operator<<(cout, hand[i]);
             cout << endl;
@@ -351,16 +339,22 @@ public:
 
         sort(handcopy.begin(), handcopy.end());
         
-        for (int i = 0; i < hand.size(); i++) {
-            operator<<(cout, hand[i]);
+        for (int i = 0; i < handcopy.size(); i++) {
+            operator<<(cout, handcopy[i]);
             cout << endl;
         }
         
         int answer;
         cout << "please select a card ";
         cin >> answer;
-        
-        return hand[answer];
+        int index = 0;
+        for (int i = 0; i < hand.size(); i++) {
+            if (handcopy[answer] == hand[i]) {
+                index = i;
+            }
+        }
+        hand.erase(hand.begin() + index);
+        return handcopy[answer];
     }
 
 
@@ -372,16 +366,22 @@ public:
 
         sort(handcopy.begin(), handcopy.end());
         
-        for (int i = 0; i < hand.size(); i++) {
-            operator<<(cout, hand[i]);
+        for (int i = 0; i < handcopy.size(); i++) {
+            operator<<(cout, handcopy[i]);
             cout << endl;
         }
         
         int answer;
         cout << "please select a card ";
         cin >> answer;
-        
-        return hand[answer];
+        int index = 0;
+        for (int i = 0; i < hand.size(); i++) {
+            if (handcopy[answer] == hand[i]) {
+                index = i;
+            }
+        }
+        hand.erase(hand.begin() + index);
+        return handcopy[answer];
     }
 
 };

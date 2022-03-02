@@ -53,6 +53,7 @@ public:
         
         return cur_player;
     }
+
     
     void deal(int dealer_index, Pack& pack) {
         cout << players[dealer_index]->get_name() << " deals" << endl;
