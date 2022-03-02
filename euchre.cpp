@@ -101,29 +101,7 @@ public:
         }
         
     }
-   
-    //REQUIRES tricks_won >= 3
-    //EFFECTS: updates score, takes in player who won trick, num tricks won in hand
-    // and if the team ordered up
-    
-    //DOES NOT WORK
-    void update_score(int team_index, int tricks_won, bool teamOrderedUp) {
-        if (teamOrderedUp) {
-            if (tricks_won == 5) {
-                score[team_index] += 2;
-            }
-            else {
-                score[team_index] += 1;
-            }
-        }
-        //team didn't orderup so get 2 points regardless
-        else {
-            score[team_index] += 2;
-        }
-    }
-    
-    
-    
+
     //EFFECTS: Checks if a team as won the game
     bool has_won(int points_needed) {
         return (score[0] >= points_needed) || (score[1] >= points_needed);
@@ -269,9 +247,7 @@ public:
         << score[0] << " points" << endl;
         cout << players[1]->get_name() << " and " << players[3]->get_name() << " have "
         << score[1] << " points" << endl << endl;
-        
-        
-        
+ 
     }
     
     int get_winner() {
