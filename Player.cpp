@@ -51,19 +51,6 @@ public:
     
     }
     
-    string opposite_color(const std::string &trump) const {
-        if (trump == Card::SUIT_DIAMONDS) {
-            return Card::SUIT_HEARTS;
-        }
-        else if (trump == Card::SUIT_HEARTS) {
-            return Card::SUIT_DIAMONDS;
-        }
-        else if (trump == Card::SUIT_SPADES) {
-            return Card::SUIT_CLUBS;
-        }
-        else return Card::SUIT_SPADES;
-    
-    }
 
     bool make_trump(const Card& upcard, bool is_dealer,
         int round, std::string& order_up_suit) const override {
@@ -104,7 +91,7 @@ public:
         }
         
         else if (round == 2 && is_dealer) {
-            order_up_suit = opposite_color(trump);
+            order_up_suit = Suit_next(trump);
             return true;
         }
         //cout << name << " passes" << endl;
@@ -277,17 +264,6 @@ public:
         hand.push_back(c);
     }
     
-    Card find_min(vector<Card> hands, int start) {
-        Card min = hands[0];
-        for (int i = start; i < int(hands.size()); i++) {
-            if (operator<(hand[i], min)) {
-                min = hands[i];
-            }
-        }
-        return min;
-    }
-    
-
     bool make_trump(const Card& upcard, bool is_dealer,
         int round, std::string& order_up_suit) const override {
         
