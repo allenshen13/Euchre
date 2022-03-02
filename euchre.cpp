@@ -153,7 +153,7 @@ public:
         int turn = 0;
         while(!players[player_index]->
               make_trump(upcard, is_dealer, roundOfTrump, order_up_suit)) {
-            //cout << players[player_index]->get_name() << " passes" << endl;
+            cout << *players[player_index] << " passes" << endl;
             player_index = next_player(player_index);
             turn++;
             if (turn == 4) {
@@ -277,7 +277,7 @@ public:
             << " win!" << endl;
         }
         
-        for (int i = 0; i < players.size(); ++i) {
+        for (int i = 0; i < int(players.size()); ++i) {
             delete players[i];
         }
     }

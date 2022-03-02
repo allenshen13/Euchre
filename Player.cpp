@@ -4,6 +4,8 @@
 #include <string>
 #include "Player.h"
 #include <vector>
+#include <cassert>
+#include <algorithm>
 using namespace std;
 
 class SimplePlayer : public Player {
@@ -70,7 +72,7 @@ public:
         string trump = upcard.get_suit();
         int faceCount = 0;
         
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             if (hand[i].is_trump(trump) && hand[i].is_face()) {
                 faceCount++;
             }
@@ -82,13 +84,13 @@ public:
                 return true;
             }
             else {
-                cout << name << " passes" << endl;
+                //cout << name << " passes" << endl;
                 return false;
             }
         }
         else if (round == 2 && !is_dealer) {
             faceCount = 0;
-            for (int i = 0; i < hand.size(); i++) {
+            for (int i = 0; i < int(hand.size()); i++) {
                 if (is_same_color(trump, hand[i]) && hand[i].is_face()) {
                     faceCount++;
                     if (faceCount >= 1) {
@@ -105,7 +107,7 @@ public:
             order_up_suit = opposite_color(trump);
             return true;
         }
-        cout << name << " passes" << endl;
+        //cout << name << " passes" << endl;
         return false;
             
     }
@@ -114,7 +116,7 @@ public:
         hand.push_back(upcard);
         string trump = upcard.get_suit();
         int index_of_lowest = 0;
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             if (Card_less(hand[i], hand[index_of_lowest], trump)) {
                 index_of_lowest = i;
             }
@@ -131,13 +133,13 @@ public:
         }
         vector<Card> handCopy;
         vector<Card> noTrump;
-        for (int i = 0; i < MAX_HAND_SIZE; i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             handCopy.push_back(hand[i]);
         }
         sort(handCopy.begin(), handCopy.end());
         
         int trumpCount = 0;
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             if (hand[i].is_trump(trump)) {
                 trumpCount++;
             }
@@ -146,22 +148,22 @@ public:
             }
 
         }
-        if (trumpCount == hand.size()) {
-            for (int i = 0; i < hand.size(); i++) {
+        if (trumpCount == int(hand.size())) {
+            for (int i = 0; i < int(hand.size()); i++) {
                 if (hand[i].is_right_bower(trump)) {
                     Card c = hand[i];
                     hand.erase(hand.begin() + i);
                     return c;
                 }
             }
-            for (int i = 0; i < hand.size(); i++) {
+            for (int i = 0; i < int(hand.size()); i++) {
                 if (hand[i].is_left_bower(trump)) {
                     Card c = hand[i];
                     hand.erase(hand.begin() + i);
                     return c;
                 }
             }
-            for (int i = 0; i < hand.size(); i++) {
+            for (int i = 0; i < int(hand.size()); i++) {
                 if (handCopy[handCopy.size() - 1] == hand[i]) {
                     hand.erase(hand.begin() + i);
                 }
@@ -170,7 +172,7 @@ public:
         }
         else {
             sort(noTrump.begin(), noTrump.end());
-            for (int i = 0; i < hand.size(); i++) {
+            for (int i = 0; i < int(hand.size()); i++) {
                 if (hand[i] == noTrump[noTrump.size() - 1]) {
                     hand.erase(hand.begin() + i);
                 }
@@ -190,7 +192,7 @@ public:
         Card low;
         vector<Card> onlySuit;
         vector<Card> neither;
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             if ((hand[i].get_suit() == led_card.get_suit(trump)) &&
                 !hand[i].is_left_bower(trump)) {
                 
@@ -205,7 +207,7 @@ public:
         Card left_bower;
         int indexOfLeft = 20;
         if (led_card.get_suit(trump) == trump) {
-            for (int i = 0; i < hand.size(); i++) {
+            for (int i = 0; i < int(hand.size()); i++) {
                 if (hand[i].is_right_bower(trump)) {
                     Card c = hand[i];
                     hand.erase(hand.begin() + i);
@@ -225,7 +227,7 @@ public:
         
         if (!onlySuit.empty()) {
             sort(onlySuit.begin(), onlySuit.end());
-            for (int i = 0; i < hand.size(); i++) {
+            for (int i = 0; i < int(hand.size()); i++) {
                 if (hand[i] == onlySuit[onlySuit.size() - 1]) {
                     Card c = hand[i];
                     hand.erase(hand.begin() + i);
@@ -235,7 +237,7 @@ public:
         }
         if (neither.size() == hand.size()) {
             sort(neither.begin(), neither.end());
-            for (int i = 0; i < hand.size(); i++) {
+            for (int i = 0; i < int(hand.size()); i++) {
                 if (hand[i] == neither[0]) {
                     hand.erase(hand.begin() + i);
                     return neither[0];
@@ -243,7 +245,7 @@ public:
             }
         }
         int lowest = 0;
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             if (Card_less(hand[i], hand[lowest], led_card, trump)) {
                 lowest = i;
             }
@@ -277,7 +279,7 @@ public:
     
     Card find_min(vector<Card> hands, int start) {
         Card min = hands[0];
-        for (int i = start; i < hands.size(); i++) {
+        for (int i = start; i < int(hands.size()); i++) {
             if (operator<(hand[i], min)) {
                 min = hands[i];
             }
@@ -290,13 +292,13 @@ public:
         int round, std::string& order_up_suit) const override {
         
         vector<Card> handCopy;
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             handCopy.push_back(hand[i]);
         }
 
         sort(handCopy.begin(), handCopy.end());
         
-        for (int i = 0; i < handCopy.size(); i++) {
+        for (int i = 0; i < int(handCopy.size()); i++) {
             cout << "Human player " << name << "'s hand: [" << i << "] " <<
             handCopy[i] << endl;
 
@@ -307,7 +309,7 @@ public:
         cin >> response;
         
         if (response == "pass") {
-            cout << name << " passes" << endl;
+            //cout << name << " passes" << endl;
             return false;
         }
         else {
@@ -320,13 +322,13 @@ public:
     void add_and_discard(const Card& upcard) override {
         vector<Card> cardcopy;
         
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             cardcopy.push_back(hand[i]);
         }
         
         sort(cardcopy.begin(), cardcopy.end());
         
-        for (int i = 0; i < cardcopy.size(); i++) {
+        for (int i = 0; i < int(cardcopy.size()); i++) {
             cout << "Human player " << name << "'s hand: [" << i << "] " <<
             cardcopy[i] << endl;
         }
@@ -339,7 +341,7 @@ public:
             return;
         }
         else {
-            for (int i = 0; i < hand.size(); i++) {
+            for (int i = 0; i < int(hand.size()); i++) {
                 if (cardcopy[answer] == hand[i]) {
                     hand.erase(hand.begin() + i);
                 }
@@ -350,13 +352,13 @@ public:
 
     Card lead_card(const std::string& trump) override {
         vector<Card> handcopy;
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             handcopy.push_back(hand[i]);
         }
 
         sort(handcopy.begin(), handcopy.end());
         
-        for (int i = 0; i < handcopy.size(); i++) {
+        for (int i = 0; i < int(handcopy.size()); i++) {
             cout << "Human player " << name << "'s hand: [" << i << "] " <<
             handcopy[i] << endl;
         }
@@ -365,7 +367,7 @@ public:
         cout << "Human player " << name << ", please select a card:" << endl;
         cin >> answer;
         int index = 0;
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             if (handcopy[answer] == hand[i]) {
                 index = i;
             }
@@ -377,13 +379,13 @@ public:
 
     Card play_card(const Card& led_card, const std::string& trump) override {
         vector<Card> handcopy;
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             handcopy.push_back(hand[i]);
         }
 
         sort(handcopy.begin(), handcopy.end());
         
-        for (int i = 0; i < handcopy.size(); i++) {
+        for (int i = 0; i < int(handcopy.size()); i++) {
             cout << "Human player " << name << "'s hand: [" << i << "] " <<
             handcopy[i] << endl;
         }
@@ -392,7 +394,7 @@ public:
         cout << "Human player " << name << ", please select a card:" << endl;
         cin >> answer;
         int index = 0;
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < int(hand.size()); i++) {
             if (handcopy[answer] == hand[i]) {
                 index = i;
             }

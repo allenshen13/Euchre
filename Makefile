@@ -49,6 +49,16 @@ euchre.exe: Card.cpp Pack.cpp Player.cpp euchre.cpp
 .PHONY: clean
 clean:
 	rm -rvf *.out *.exe *.dSYM *.stackdump
+	
+# Copy files to CAEN Linux
+sync :
+	rsync \
+  -rtv \
+  --delete \
+  --exclude '.git*' \
+  --filter=':- .gitignore' \
+  ../p3-euchre/ \
+  rbaronia@login.engin.umich.edu:p3-euchre-copy/
 
 # Style check
 CPD ?= /usr/um/pmd-6.0.1/bin/run.sh cpd
