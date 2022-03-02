@@ -56,7 +56,8 @@ public:
 
     
     void deal(int dealer_index, Pack& pack) {
-        cout << players[dealer_index]->get_name() << " deals" << endl;
+        cout << *players[dealer_index];
+        cout << " deals" << endl;
         if (shuffle) {
             pack.shuffle();
         }
@@ -158,6 +159,7 @@ public:
         
     }
     
+    
     void play_hand(Game &g, int dealer_index) {
         g.deal(dealer_index, pack);
         const Card upcard = pack.deal_one();
@@ -173,7 +175,7 @@ public:
         int turn = 0;
         while(!players[player_index]->
               make_trump(upcard, is_dealer, roundOfTrump, order_up_suit)) {
-            cout << players[player_index]->get_name() << " passes" << endl;
+            //cout << players[player_index]->get_name() << " passes" << endl;
             player_index = next_player(player_index);
             turn++;
             if (turn == 4) {
@@ -208,8 +210,9 @@ public:
         int trickCount = 0;
         int tricks_won[4] = {0, 0, 0, 0};
         
-        Card led_card = players[player_index]->lead_card(trump);
+        Card led_card;
         while (trickCount < 5) {
+            led_card = players[player_index]->lead_card(trump);
             cout << led_card;
             cout << " led by " << players[player_index]->get_name() << endl;
             winner_index = play_trick(player_index, led_card, trump);
@@ -218,7 +221,6 @@ public:
             trickCount++;
             //need to update led card for each trick
             player_index = winner_index;
-            led_card = players[player_index]->lead_card(trump);
         }
         
         // sees which team won the hand
@@ -279,8 +281,7 @@ public:
         
         return 1;
     }
-    
-
+  
     void play_game(Game g, int points_to_win) {
         int dealer_index = 0;
         int hand_count = 0;

@@ -82,6 +82,7 @@ public:
                 return true;
             }
             else {
+                cout << name << " passes" << endl;
                 return false;
             }
         }
@@ -104,7 +105,7 @@ public:
             order_up_suit = opposite_color(trump);
             return true;
         }
-        
+        cout << name << " passes" << endl;
         return false;
             
     }
@@ -296,15 +297,17 @@ public:
         sort(handCopy.begin(), handCopy.end());
         
         for (int i = 0; i < handCopy.size(); i++) {
-            operator<<(cout, handCopy[i]);
-            cout << endl;
+            cout << "Human player " << name << "'s hand: [" << i << "] " <<
+            handCopy[i] << endl;
+
         }
         
         string response;
-        cout << "Please select a suit or \"pass\" ";
+        cout << "Please select a suit, or \"pass\" ";
         cin >> response;
         
         if (response == "pass") {
+            cout << name << " passes" << endl;
             return false;
         }
         else {
@@ -315,13 +318,21 @@ public:
     }
 
     void add_and_discard(const Card& upcard) override {
+        vector<Card> cardcopy;
         
         for (int i = 0; i < hand.size(); i++) {
-            operator<<(cout, hand[i]);
-            cout << endl;
+            cardcopy.push_back(hand[i]);
+        }
+        
+        sort(cardcopy.begin(), cardcopy.end());
+        
+        for (int i = 0; i < cardcopy.size(); i++) {
+            cout << "Human player " << name << "'s hand: [" << i << "] " <<
+            hand[i] << endl;
         }
         int answer;
-        cout << "Which card would you like to discard? ";
+        cout << "Discard upcard: [-1]" << endl;
+        cout << "please select a card to discard ";
         cin >> answer;
         if (answer == -1) {
             return;
@@ -340,12 +351,12 @@ public:
         sort(handcopy.begin(), handcopy.end());
         
         for (int i = 0; i < handcopy.size(); i++) {
-            operator<<(cout, handcopy[i]);
-            cout << endl;
+            cout << "Human player " << name << "'s hand: [" << i << "] " <<
+            handcopy[i] << endl;
         }
         
         int answer;
-        cout << "please select a card ";
+        cout << "Human player " << name << ", please select a card: ";
         cin >> answer;
         int index = 0;
         for (int i = 0; i < hand.size(); i++) {
@@ -367,12 +378,12 @@ public:
         sort(handcopy.begin(), handcopy.end());
         
         for (int i = 0; i < handcopy.size(); i++) {
-            operator<<(cout, handcopy[i]);
-            cout << endl;
+            cout << "Human player " << name << "'s hand: [" << i << "] " <<
+            handcopy[i] << endl;
         }
         
         int answer;
-        cout << "please select a card ";
+        cout << "Human player " << name << ", please select a card: ";
         cin >> answer;
         int index = 0;
         for (int i = 0; i < hand.size(); i++) {
