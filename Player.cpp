@@ -303,7 +303,7 @@ public:
         }
         
         string response;
-        cout << "Please select a suit, or \"pass\" ";
+        cout << "Human player " << name << ", please enter a suit, or \"pass\":" << endl;
         cin >> response;
         
         if (response == "pass") {
@@ -328,17 +328,23 @@ public:
         
         for (int i = 0; i < cardcopy.size(); i++) {
             cout << "Human player " << name << "'s hand: [" << i << "] " <<
-            hand[i] << endl;
+            cardcopy[i] << endl;
         }
         int answer;
         cout << "Discard upcard: [-1]" << endl;
-        cout << "please select a card to discard ";
+        cout << "Human player " << name;
+        cout << ", please select a card to discard:" << endl;
         cin >> answer;
         if (answer == -1) {
             return;
         }
         else {
-            hand[answer] = upcard;
+            for (int i = 0; i < hand.size(); i++) {
+                if (cardcopy[answer] == hand[i]) {
+                    hand.erase(hand.begin() + i);
+                }
+            }
+            hand.push_back(upcard);
         }
     }
 
@@ -356,7 +362,7 @@ public:
         }
         
         int answer;
-        cout << "Human player " << name << ", please select a card: ";
+        cout << "Human player " << name << ", please select a card:" << endl;
         cin >> answer;
         int index = 0;
         for (int i = 0; i < hand.size(); i++) {
@@ -383,7 +389,7 @@ public:
         }
         
         int answer;
-        cout << "Human player " << name << ", please select a card: ";
+        cout << "Human player " << name << ", please select a card:" << endl;
         cin >> answer;
         int index = 0;
         for (int i = 0; i < hand.size(); i++) {

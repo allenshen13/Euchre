@@ -310,10 +310,9 @@ public:
 
 
 int main(int argc, char* argv[]) {
-    string error = "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
-    "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 NAME4 TYPE4";
     if (argc != 12) {
-        cout << error << endl; return 1;
+        cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
+        "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 NAME4 TYPE4";
     }
     for (int i = 0; i < argc; i++) {
         cout << argv[i] << " ";
@@ -326,11 +325,13 @@ int main(int argc, char* argv[]) {
           && (atoi(argv[3]) >= 1 && atoi(argv[3]) <= 100))) {
         cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
              << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
-            << "NAME4 TYPE4" << endl; return 1;
+            << "NAME4 TYPE4" << endl;
+        return 1;
     }
     ifstream is(argv[1]);
     if (!is.is_open()) {
-        cout << "Error opening " << argv[1] << endl; return 1;
+        cout << "Error opening " << argv[1] << endl;
+        return 1;
     }
     Pack p(is);
     bool shuff = true;
@@ -343,44 +344,3 @@ int main(int argc, char* argv[]) {
     }
     g.play_game(g, atoi(argv[3]));
 }
-
-  /*
-    TEST(game_stuff) {
-        ifstream in;
-        in.open("Pack.in");
-        Pack p(in);
-        Game g(p, true);
-        g.add_player("Edsger", "Simple");
-        g.add_player("Fran", "Simple");
-        g.add_player("Gabriel", "Simple");
-        g.add_player("Herb", "Simple");
-        
-        g.play_game(g, 10);
-        
-        
-        
-        
-        
-        //string trump = Card::SUIT_HEARTS;
-        //Card led_card(Card::RANK_JACK, Card::SUIT_SPADES);
-        //ASSERT_EQUAL(g.get_player(1)->lead_card(trump), led_card);
-        //ASSERT_EQUAL(g.get_player(2)->play_card(led_card, trump), Card(Card::RANK_KING, Card::SUIT_SPADES));
-        
-        //ASSERT_EQUAL(g.play_trick(1, led_card, trump), 3);
-        //g.deal(0);
-        
-        
-        
-    }
-     
-    
-    TEST_MAIN()*/
-    
-
-    
-    
-
-    
-    
-
-

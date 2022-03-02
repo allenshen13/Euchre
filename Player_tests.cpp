@@ -4,8 +4,7 @@
 #include "unit_test_framework.h"
 #include "Card.h"
 #include <iostream>
-//#include "euchre.cpp"
-#include "Pack.h"
+//#include "Pack.h"
 
 using namespace std;
 
