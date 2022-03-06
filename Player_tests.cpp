@@ -48,11 +48,27 @@ TEST(test_player_add_discard) {
     alice->add_card(Card(Card::RANK_NINE, Card::SUIT_SPADES));
     alice->add_card(Card(Card::RANK_TEN, Card::SUIT_SPADES));
     alice->add_card(Card(Card::RANK_JACK, Card::SUIT_SPADES));
-    
-    alice->add_and_discard(Card(Card::RANK_TEN, Card::SUIT_DIAMONDS));
-    
-
+    Card upcard(Card::RANK_TEN, Card::SUIT_CLUBS);
+    alice->add_and_discard(upcard);
+    Card led(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+    // checks if card was added and replaced lowest card
+    ASSERT_EQUAL(alice->play_card(led, Card::SUIT_SPADES), upcard);
     delete alice;
+    
+    Player * hi = Player_factory("hi", "Simple");
+    hi->add_card(Card(Card::RANK_KING, Card::SUIT_HEARTS));
+    hi->add_card(Card(Card::RANK_ACE, Card::SUIT_HEARTS));
+    hi->add_card(Card(Card::RANK_TEN, Card::SUIT_HEARTS));
+    hi->add_card(Card(Card::RANK_JACK, Card::SUIT_HEARTS));
+    upcard = Card(Card::RANK_NINE, Card::SUIT_HEARTS);
+    hi->add_and_discard(upcard);
+    Card lowest(Card::RANK_TEN, Card::SUIT_HEARTS);
+    led = Card(Card::RANK_ACE, Card::SUIT_DIAMONDS);
+    //Checks if added card was dropped
+    ASSERT_EQUAL(hi->play_card(led, Card::SUIT_SPADES), lowest);
+    delete hi;
+    
+    
 }
 
 TEST(test_player_lead_card) {
@@ -67,6 +83,7 @@ TEST(test_player_lead_card) {
     Card new_expected(Card::RANK_JACK, Card::SUIT_SPADES);
     ASSERT_EQUAL(alice->lead_card(Card::SUIT_HEARTS), new_expected);
     
+
     delete alice;
     
     Player * rishi = Player_factory("Rishi", "Simple");
@@ -93,6 +110,8 @@ TEST(test_player_lead_card) {
                  Card(Card::RANK_JACK, Card::SUIT_HEARTS));
     
     delete rishi2;
+    
+    
 }
 
 TEST(test_player_play_card) {
@@ -187,5 +206,7 @@ TEST(left_bower_play_card_cases) {
     delete shenal;
     
 }
+
+
 
 TEST_MAIN()
