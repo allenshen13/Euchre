@@ -113,60 +113,41 @@ public:
     }
 
     Card lead_card(const std::string& trump) override {
-        if (hand.size() == 1) {
-            Card c = hand[0];
-            hand.erase(hand.begin());
-            return c;
-        }
-        vector<Card> handCopy;
-        vector<Card> noTrump;
-        for (int i = 0; i < int(hand.size()); i++) {
-            handCopy.push_back(hand[i]);
-        }
-        sort(handCopy.begin(), handCopy.end());
-        
         int trumpCount = 0;
+        vector<Card> copy;
         for (int i = 0; i < int(hand.size()); i++) {
-            if (hand[i].is_trump(trump)) {
+            if (hand[i].get_suit(trump) == trump) {
                 trumpCount++;
             }
-            else {
-                noTrump.push_back(hand[i]);
+            copy.push_back(hand[i]);
+        }
+        int index = 0;
+        
+        for (int i = 0; i < int(hand.size()); i++) {
+            for (int j = i + 1; j < int(hand.size()); j++) {
+                if (Card_less(copy[j], copy[i], trump)) {
+                    Card temp = copy[i];
+                    copy[i] = copy[j];
+                    copy[j] = temp;
+                }
             }
+        }
+        if (int(copy.size()) != trumpCount) {
+            for (int i = int(copy.size()) - 1; i >= 0; i--) {
+                if (copy[i].get_suit(trump) == trump) {
+                    copy.erase(copy.begin() + i);
+                }
+            }
+        }
+        for (int i = 0; i < int(hand.size()); i++) {
+            if (copy[int(copy.size()) - 1] == hand[i]) {
+                index = i;
+            }
+        }
+        Card temp = hand[index];
+        hand.erase(hand.begin() + index);
+        return temp;
 
-        }
-        if (trumpCount == int(hand.size())) {
-            for (int i = 0; i < int(hand.size()); i++) {
-                if (hand[i].is_right_bower(trump)) {
-                    Card c = hand[i];
-                    hand.erase(hand.begin() + i);
-                    return c;
-                }
-            }
-            for (int i = 0; i < int(hand.size()); i++) {
-                if (hand[i].is_left_bower(trump)) {
-                    Card c = hand[i];
-                    hand.erase(hand.begin() + i);
-                    return c;
-                }
-            }
-            for (int i = 0; i < int(hand.size()); i++) {
-                if (handCopy[handCopy.size() - 1] == hand[i]) {
-                    hand.erase(hand.begin() + i);
-                }
-            }
-            return handCopy[handCopy.size() - 1];
-        }
-        else {
-            sort(noTrump.begin(), noTrump.end());
-            for (int i = 0; i < int(hand.size()); i++) {
-                if (hand[i] == noTrump[noTrump.size() - 1]) {
-                    hand.erase(hand.begin() + i);
-                }
-            }
-            return noTrump[noTrump.size() - 1];
-            
-            }
     }
 
    
