@@ -111,6 +111,40 @@ public:
         hand.erase(hand.begin() + index_of_lowest);
         
     }
+    
+    void sort_basic(vector<Card> & copy, string trump) {
+        for (int i = 0; i < int(copy.size()); i++) {
+            for (int j = i + 1; j < int(copy.size()); j++) {
+                if (Card_less(copy[j], copy[i], trump)) {
+                    Card temp = copy[i];
+                    copy[i] = copy[j];
+                    copy[j] = temp;
+                }
+            }
+        }
+    }
+    
+    void sort_w_suit(vector<Card> & copy, string trump, Card led) {
+        for (int i = 0; i < int(copy.size()); i++) {
+            for (int j = i + 1; j < int(copy.size()); j++) {
+                if (Card_less(copy[j], copy[i], led, trump)) {
+                    Card temp = copy[i];
+                    copy[i] = copy[j];
+                    copy[j] = temp;
+                }
+            }
+        }
+        
+    }
+    
+    int find_card(Card to_find, vector<Card> find) {
+        for (int i = 0; i < int(find.size()); i++) {
+            if (to_find == find[i]) {
+                return i;
+            }
+        }
+        return 0;
+    }
 
     Card lead_card(const std::string& trump) override {
         int trumpCount = 0;
@@ -121,17 +155,9 @@ public:
             }
             copy.push_back(hand[i]);
         }
-        int index = 0;
         
-        for (int i = 0; i < int(hand.size()); i++) {
-            for (int j = i + 1; j < int(hand.size()); j++) {
-                if (Card_less(copy[j], copy[i], trump)) {
-                    Card temp = copy[i];
-                    copy[i] = copy[j];
-                    copy[j] = temp;
-                }
-            }
-        }
+        sort_basic(copy, trump);
+        
         if (int(copy.size()) != trumpCount) {
             for (int i = int(copy.size()) - 1; i >= 0; i--) {
                 if (copy[i].get_suit(trump) == trump) {
@@ -139,14 +165,10 @@ public:
                 }
             }
         }
-        for (int i = 0; i < int(hand.size()); i++) {
-            if (copy[int(copy.size()) - 1] == hand[i]) {
-                index = i;
-            }
-        }
-        Card temp = hand[index];
+        
+        int index = find_card(copy[int(copy.size()) - 1], hand);
         hand.erase(hand.begin() + index);
-        return temp;
+        return copy[int(copy.size() - 1)];
 
     }
 
@@ -156,40 +178,24 @@ public:
         for (int i = 0; i < int(hand.size()); i++) {
             sorted.push_back(hand[i]);
         }
-        for (int i = 0; i < int(sorted.size()); i++) {
-            for (int j = i + 1; j < int(sorted.size()); j++) {
-                if (Card_less(sorted[j], sorted[i], led_card, trump)) {
-                    Card temp = sorted[i];
-                    sorted[i] = sorted[j];
-                    sorted[j] = temp;
-                }
-            }
-        }
+        
+        sort_w_suit(sorted, trump, led_card);
+        
         int suit_ind = 6;
-        int index = 0;
         for (int i = 0; i < int(sorted.size()); i++) {
             if (sorted[i].get_suit(trump) == led_card.get_suit(trump)) {
                 suit_ind = i;
             }
         }
-        if (suit_ind != 6) {
-            for (int i = 0; i < int(hand.size()); i++) {
-                if (hand[i] == sorted[suit_ind]) {
-                    index = i;
-                    hand.erase(hand.begin() + index);
-                    return sorted[suit_ind];
-                }
-            }
+
+        if (suit_ind == 6) {
+            suit_ind = 0;
         }
-        for (int i = 0; i < int(hand.size()); i++) {
-            if (hand[i] == sorted[0]) {
-                index = i;
-            }
-        }
-        hand.erase(hand.begin() + index);
-        return sorted[0];
-        
-        
+    
+        int hand_ind = find_card(sorted[suit_ind], hand);
+        hand.erase(hand.begin() + hand_ind);
+        return sorted[suit_ind];
+         
     }
 
 };
