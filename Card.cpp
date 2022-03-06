@@ -115,72 +115,46 @@ bool Card::is_trump(const std::string &trump) const {
 //EFFECTS Returns true if lhs is lower value than rhs.
 //  Does not consider trump.
 //(A > K > Q > J > 10 > 9), with ties broken by suit (D > C > H > S)
+int add_points(const Card c) {
+    int cardval = 0;
+    if (c.get_rank() == Card::RANK_NINE) {
+        cardval += 10;
+    }
+    else if (c.get_rank() == Card::RANK_TEN){
+        cardval += 20;
+    }
+    else if (c.get_rank() == Card::RANK_JACK){
+        cardval += 30;
+    }
+    else if(c.get_rank() == Card::RANK_QUEEN){
+        cardval += 40;
+    }
+    else if (c.get_rank() == Card::RANK_KING) {
+        cardval += 50;
+    }
+    else if (c.get_rank() == Card::RANK_ACE) {
+        cardval += 60;
+    }
+    if (c.get_suit() == Card::SUIT_SPADES) {
+        cardval += 1;
+    }
+    else if (c.get_suit() == Card::SUIT_HEARTS) {
+        cardval += 2;
+    }
+    else if (c.get_suit() == Card::SUIT_CLUBS) {
+        cardval += 3;
+    }
+    else if (c.get_suit() == Card::SUIT_DIAMONDS) {
+        cardval += 4;
+    }
+    
+    return cardval;
+
+}
+
 bool operator<(const Card &lhs, const Card &rhs) {
-    int lhsCardVal = 0;
-    int rhsCardVal = 0;
-
-    if (lhs.get_rank() == Card::RANK_NINE) {
-        lhsCardVal += 10;
-    }
-    else if (lhs.get_rank() == Card::RANK_TEN){
-        lhsCardVal += 20;
-    }
-    else if (lhs.get_rank() == Card::RANK_JACK){
-        lhsCardVal += 30;
-    }
-    else if(lhs.get_rank() == Card::RANK_QUEEN){
-        lhsCardVal += 40;
-    }
-    else if (lhs.get_rank() == Card::RANK_KING) {
-        lhsCardVal += 50;
-    }
-    else if (lhs.get_rank() == Card::RANK_ACE) {
-        lhsCardVal += 60;
-    }
-
-    if (lhs.get_suit() == Card::SUIT_SPADES) {
-        lhsCardVal += 1;
-    }
-    else if (lhs.get_suit() == Card::SUIT_HEARTS) {
-        lhsCardVal += 2;
-    }
-    else if (lhs.get_suit() == Card::SUIT_CLUBS) {
-        lhsCardVal += 3;
-    }
-    else if (lhs.get_suit() == Card::SUIT_DIAMONDS) {
-        lhsCardVal += 4;
-    }
-    if (rhs.get_rank() == Card::RANK_NINE) {
-        rhsCardVal += 10;
-    }
-    else if (rhs.get_rank() == Card::RANK_TEN) {
-        rhsCardVal += 20;
-    }
-    else if (rhs.get_rank() == Card::RANK_JACK) {
-        rhsCardVal += 30;
-    }
-    else if (rhs.get_rank() == Card::RANK_QUEEN) {
-        rhsCardVal += 40;
-    }
-    else if (rhs.get_rank() == Card::RANK_KING) {
-        rhsCardVal += 50;
-    }
-    else if (rhs.get_rank() == Card::RANK_ACE) {
-        rhsCardVal += 60;
-    }
-
-    if (rhs.get_suit() == Card::SUIT_SPADES) {
-        rhsCardVal += 1;
-    }
-    else if (rhs.get_suit() == Card::SUIT_HEARTS) {
-        rhsCardVal += 2;
-    }
-    else if (rhs.get_suit() == Card::SUIT_CLUBS) {
-        rhsCardVal += 3;
-    }
-    else if (rhs.get_suit() == Card::SUIT_DIAMONDS) {
-        rhsCardVal += 4;
-    }
+    int lhsCardVal = add_points(lhs);
+    int rhsCardVal = add_points(rhs);
 
     if (lhsCardVal < rhsCardVal) {
         return true;
@@ -267,7 +241,7 @@ bool Card_less(const Card &a, const Card &b, const std::string &trump) {
 //  and the suit led to determine order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, const Card &led_card,
                const std::string &trump) {
-    if (led_card.get_suit() == trump) {
+    if (led_card.get_suit(trump) == trump) {
         if (Card_less(a, b, trump)) {
             return true;
         }
@@ -299,7 +273,8 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card,
                 b.get_suit() == led_card.get_suit()) {
                 return operator<(a, b);
             }
-            else if (a.get_suit() == led_card.get_suit()) {
+            else if (a.get_suit() == led_card.get_suit() && b.get_suit()
+                     != led_card.get_suit()) {
                 return false;
             }
             else if (b.get_suit() == led_card.get_suit()) {

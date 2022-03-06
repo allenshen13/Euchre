@@ -137,17 +137,9 @@ public:
         
     }
     
-    
-    void play_hand(Game &g, int dealer_index) {
-        g.deal(dealer_index, pack);
-        const Card upcard = pack.deal_one();
-        cout << upcard << " turned up" << endl;
-        pack.reset();
-        bool is_dealer = false;
+    int orderUp(int dealer_index, Card upcard, bool is_dealer,
+                 string &order_up_suit) {
         int roundOfTrump = 1;
-        string order_up_suit;
-        
-        //playerind needs to be player left of dealer
         int player_index = next_player(dealer_index);
         // makes trump, order_up_suit is updated
         int turn = 0;
@@ -168,22 +160,69 @@ public:
             }
 
         }
+        
         // ordered_up_index shows which team ordered up
         int ordered_up_index = player_index;
         cout << players[ordered_up_index]->get_name() << " orders up " << order_up_suit
-        << endl << endl;;
+        << endl << endl;
+        
         //NEED TO DOUBLE CHECK ADD_DISCARD()
         if (roundOfTrump == 1) {
             players[dealer_index]->add_and_discard(upcard);
         }
         
-        //Trump has been made
-        // trick playing begins
-        //player index restarts at person left of dealer
-        // need to consider after someone has one a trick what the index will be
+        return ordered_up_index;
+    }
+    
+    void print_score_updates(Game &g, bool teamOrderedUp, int teamIndex,
+                             int team_tricks) {
+        if (teamIndex == 0) {
+            cout << players[0]->get_name() << " and " << players[2]->get_name()
+            << " win the hand" << endl;
+        }
+        else {
+            cout << players[1]->get_name() << " and " << players[3]->get_name()
+            << " win the hand" << endl;
+        }
+            
+        if (teamOrderedUp) {
+            if (team_tricks == 5) {
+                cout << "march!" << endl;
+                score[teamIndex] = score[teamIndex] + 2;
+                
+            }
+            else {
+                score[teamIndex] = score[teamIndex] + 1;
+            }
+        }
+        else {
+            cout << "euchred!" << endl;
+            score[teamIndex] = score[teamIndex] + 2;
+        }
+        cout << players[0]->get_name() << " and " << players[2]->get_name() << " have "
+        << score[0] << " points" << endl;
+        cout << players[1]->get_name() << " and " << players[3]->get_name() << " have "
+        << score[1] << " points" << endl << endl;
+        
+    }
+    
+    Card dealOut(Game &g, int dealer_index) {
+        g.deal(dealer_index, pack);
+        const Card upcard = pack.deal_one();
+        cout << upcard << " turned up" << endl;
+        pack.reset();
+        return upcard;
+    }
+    
+    void play_hand(Game &g, int dealer_index) {
+        Card upcard = dealOut(g, dealer_index);
+        bool is_dealer = false;
+        string order_up_suit;
+        int ordered_up_index;
+        ordered_up_index = orderUp(dealer_index, upcard, is_dealer, order_up_suit);
         
         string trump = order_up_suit;
-        player_index = next_player(dealer_index);
+        int player_index = next_player(dealer_index);
         int winner_index;
         int trickCount = 0;
         int tricks_won[4] = {0, 0, 0, 0};
@@ -220,33 +259,8 @@ public:
             }
         }
         
-        if (team_index == 0) {
-            cout << players[0]->get_name() << " and " << players[2]->get_name()
-            << " win the hand" << endl;
-        }
-        else {
-            cout << players[1]->get_name() << " and " << players[3]->get_name()
-            << " win the hand" << endl;
-        }
-            
-        if (teamOrderedUp) {
-            if (team_tricks == 5) {
-                cout << "march!" << endl;
-                score[team_index] = score[team_index] + 2;
-                
-            }
-            else {
-                score[team_index] = score[team_index] + 1;
-            }
-        }
-        else {
-            cout << "euchred!" << endl;
-            score[team_index] = score[team_index] + 2;
-        }
-        cout << players[0]->get_name() << " and " << players[2]->get_name() << " have "
-        << score[0] << " points" << endl;
-        cout << players[1]->get_name() << " and " << players[3]->get_name() << " have "
-        << score[1] << " points" << endl << endl;
+        print_score_updates(g, teamOrderedUp, team_index, team_tricks);
+        
  
     }
     
