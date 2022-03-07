@@ -74,23 +74,23 @@ public:
                 return false;
             }
         }
-    
-        
+
         faceCount = 0;
-        for (int i = 0; i < int(hand.size()); i++) {
-            if (round == 2 && !is_dealer && is_same_color(trump, hand[i]) &&
-                hand[i].is_face()) {
-                faceCount++;
-                if (faceCount >= 1) {
-                    order_up_suit = hand[i].get_suit();
+        if (round == 2 && !is_dealer) {
+            trump = Suit_next(trump);
+            for (int i = 0; i < int(hand.size()); i++) {
+                string suit = hand[i].get_suit(trump);
+                if (suit == trump) {
+                    faceCount++;
+                    order_up_suit = trump;
                 }
             }
-        }
-        if (faceCount >= 1) {
-            return true;
+            if (faceCount >= 1) {
+                return true;
+            }
         }
         
-        else if (round == 2 && is_dealer) {
+        if (round == 2 && is_dealer) {
             order_up_suit = Suit_next(trump);
             return true;
         }
@@ -145,8 +145,17 @@ public:
         }
         return 0;
     }
+    
+    Card one_left(vector<Card> cards) {
+        Card temp = cards[0];
+        cards.erase(cards.begin());
+        return temp;
+    }
 
     Card lead_card(const std::string& trump) override {
+        if (int(hand.size()) == 1) {
+            one_left(hand);
+        }
         int trumpCount = 0;
         vector<Card> copy;
         for (int i = 0; i < int(hand.size()); i++) {
@@ -174,6 +183,9 @@ public:
 
    
     Card play_card(const Card& led_card, const std::string& trump) override {
+        if (int(hand.size()) == 1) {
+            one_left(hand);
+        }
         vector<Card> sorted;
         for (int i = 0; i < int(hand.size()); i++) {
             sorted.push_back(hand[i]);

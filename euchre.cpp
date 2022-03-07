@@ -265,9 +265,7 @@ public:
     }
     
     int get_winner() {
-        if (score[0] > score[1]) {
-            return 0;
-        }
+        if (score[0] > score[1]) return 0;
         
         return 1;
     }

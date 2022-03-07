@@ -38,7 +38,134 @@ TEST(test_player_make_trump) {
     
     delete alice;
     
+    Player * hi = Player_factory("hi", "Simple");
+    hi->add_card(Card(Card::RANK_KING, Card::SUIT_HEARTS));
+    hi->add_card(Card(Card::RANK_ACE, Card::SUIT_HEARTS));
+    hi->add_card(Card(Card::RANK_TEN, Card::SUIT_HEARTS));
+    hi->add_card(Card(Card::RANK_JACK, Card::SUIT_HEARTS));
+    upcard = Card(Card::RANK_NINE, Card::SUIT_HEARTS);
+    ASSERT_TRUE(hi->make_trump(upcard, true, 2, order_up_suit));
+    ASSERT_EQUAL("Diamonds", order_up_suit);
     
+    ASSERT_TRUE(hi->make_trump(upcard, true, 1, order_up_suit));
+    ASSERT_EQUAL("Hearts", order_up_suit);
+    
+    ASSERT_TRUE(hi->make_trump(upcard, false, 1, order_up_suit));
+    ASSERT_EQUAL("Hearts", order_up_suit);
+    //left bower
+    ASSERT_TRUE(hi->make_trump(upcard, false, 2, order_up_suit));
+    ASSERT_EQUAL("Diamonds", order_up_suit);
+    
+    upcard = Card(Card::RANK_NINE, Card::SUIT_DIAMONDS);
+    
+    ASSERT_TRUE(hi->make_trump(upcard, false, 2, order_up_suit));
+    ASSERT_EQUAL("Hearts", order_up_suit);
+    
+    ASSERT_TRUE(hi->make_trump(upcard, true, 2, order_up_suit));
+    ASSERT_EQUAL("Hearts", order_up_suit);
+    
+    ASSERT_FALSE(hi->make_trump(upcard, false, 1, order_up_suit));
+    
+    
+    ASSERT_FALSE(hi->make_trump(upcard, true, 1, order_up_suit));
+    
+    
+    upcard = Card(Card::RANK_NINE, Card::SUIT_SPADES);
+    
+    ASSERT_FALSE(hi->make_trump(upcard, false, 2, order_up_suit));
+    
+    
+    ASSERT_TRUE(hi->make_trump(upcard, true, 2, order_up_suit));
+    ASSERT_EQUAL("Clubs", order_up_suit);
+    
+    ASSERT_FALSE(hi->make_trump(upcard, false, 1, order_up_suit));
+   
+    
+    ASSERT_FALSE(hi->make_trump(upcard, true, 1, order_up_suit));
+    
+    
+    delete hi;
+    
+    
+    
+}
+
+TEST(make_trump_round1) {
+    
+    Player * rishi = Player_factory("Rishi", "Simple");
+    rishi->add_card(Card(Card::RANK_TEN, Card::SUIT_DIAMONDS));
+    rishi->add_card(Card(Card::RANK_ACE, Card::SUIT_SPADES));
+    rishi->add_card(Card(Card::RANK_ACE, Card::SUIT_HEARTS));
+    rishi->add_card(Card(Card::RANK_JACK, Card::SUIT_CLUBS));
+    rishi->add_card(Card(Card::RANK_QUEEN, Card::SUIT_HEARTS));
+    
+    Card upcard(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    string order_up_suit;
+    
+    ASSERT_FALSE(rishi->make_trump(upcard, false, 1, order_up_suit));
+    ASSERT_FALSE(rishi->make_trump(upcard, true, 1, order_up_suit));
+    
+    upcard = Card(Card::RANK_NINE, Card::SUIT_SPADES);
+    
+    ASSERT_TRUE(rishi->make_trump(upcard, false, 1, order_up_suit));
+    ASSERT_EQUAL("Spades", order_up_suit);
+    ASSERT_TRUE(rishi->make_trump(upcard, true, 1, order_up_suit));
+    ASSERT_EQUAL("Spades", order_up_suit);
+    
+    upcard = Card(Card::RANK_NINE, Card::SUIT_CLUBS);
+    
+    ASSERT_FALSE(rishi->make_trump(upcard, false, 1, order_up_suit));
+    ASSERT_FALSE(rishi->make_trump(upcard, true, 1, order_up_suit));
+    
+    upcard = Card(Card::RANK_NINE, Card::SUIT_HEARTS);
+    
+    ASSERT_TRUE(rishi->make_trump(upcard, false, 1, order_up_suit));
+    ASSERT_EQUAL("Hearts", order_up_suit);
+    ASSERT_TRUE(rishi->make_trump(upcard, true, 1, order_up_suit));
+    ASSERT_EQUAL("Hearts", order_up_suit);
+
+    delete rishi;
+}
+
+TEST(make_trump_round2_face) {
+    
+    Player * rishi = Player_factory("Rishi", "Simple");
+    rishi->add_card(Card(Card::RANK_TEN, Card::SUIT_DIAMONDS));
+    rishi->add_card(Card(Card::RANK_NINE, Card::SUIT_DIAMONDS));
+    rishi->add_card(Card(Card::RANK_ACE, Card::SUIT_HEARTS));
+    rishi->add_card(Card(Card::RANK_JACK, Card::SUIT_CLUBS));
+    rishi->add_card(Card(Card::RANK_QUEEN, Card::SUIT_DIAMONDS));
+    
+    Card upcard(Card::RANK_JACK, Card::SUIT_DIAMONDS);
+    string order_up_suit;
+    
+    ASSERT_TRUE(rishi->make_trump(upcard, false, 2, order_up_suit));
+    ASSERT_EQUAL("Hearts", order_up_suit);
+    ASSERT_TRUE(rishi->make_trump(upcard, true, 2, order_up_suit));
+    ASSERT_EQUAL("Hearts", order_up_suit);
+    
+    upcard = Card(Card::RANK_NINE, Card::SUIT_SPADES);
+    
+    ASSERT_TRUE(rishi->make_trump(upcard, false, 2, order_up_suit));
+    ASSERT_EQUAL("Clubs", order_up_suit);
+    ASSERT_TRUE(rishi->make_trump(upcard, true, 2, order_up_suit));
+    ASSERT_EQUAL("Clubs", order_up_suit);
+    
+    upcard = Card(Card::RANK_NINE, Card::SUIT_CLUBS);
+    
+    ASSERT_TRUE(rishi->make_trump(upcard, false, 2, order_up_suit));
+    ASSERT_EQUAL("Spades", order_up_suit);
+    ASSERT_TRUE(rishi->make_trump(upcard, true, 2, order_up_suit));
+    ASSERT_EQUAL("Spades", order_up_suit);
+    
+    upcard = Card(Card::RANK_NINE, Card::SUIT_HEARTS);
+    
+    ASSERT_TRUE(rishi->make_trump(upcard, false, 2, order_up_suit));
+    ASSERT_EQUAL("Diamonds", order_up_suit);
+    ASSERT_TRUE(rishi->make_trump(upcard, true, 2, order_up_suit));
+    ASSERT_EQUAL("Diamonds", order_up_suit);
+    
+    delete rishi;
 }
 
 TEST(test_player_add_discard) {
@@ -72,6 +199,13 @@ TEST(test_player_add_discard) {
 }
 
 TEST(test_player_lead_card) {
+    
+    Player * dan = Player_factory("dan", "Simple");
+    dan->add_card(Card(Card::RANK_JACK, Card::SUIT_HEARTS));
+    ASSERT_EQUAL(dan->lead_card(Card::SUIT_SPADES),
+                 Card(Card::RANK_JACK, Card::SUIT_HEARTS));
+    delete dan;
+    
     Player * alice = Player_factory("Alice", "Simple");
     alice->add_card(Card(Card::RANK_KING, Card::SUIT_HEARTS));
     alice->add_card(Card(Card::RANK_ACE, Card::SUIT_HEARTS));
@@ -115,6 +249,13 @@ TEST(test_player_lead_card) {
 }
 
 TEST(test_player_play_card) {
+    
+    Player * dan = Player_factory("dan", "Simple");
+    dan->add_card(Card(Card::RANK_JACK, Card::SUIT_HEARTS));
+    ASSERT_EQUAL(dan->play_card(Card(Card::RANK_TEN, Card::SUIT_SPADES), "Spades"),
+                 Card(Card::RANK_JACK, Card::SUIT_HEARTS));
+    delete dan;
+    
     Player * alice = Player_factory("Alice", "Simple");
     alice->add_card(Card(Card::RANK_TEN, Card::SUIT_SPADES));
     alice->add_card(Card(Card::RANK_JACK, Card::SUIT_DIAMONDS));
@@ -206,6 +347,7 @@ TEST(left_bower_play_card_cases) {
     delete shenal;
     
 }
+
 
 
 
